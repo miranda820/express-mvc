@@ -1,0 +1,23 @@
+{>layout/}
+{<content}
+	<form action="/api/guests" method="POST">
+		<label>first name:</label>
+		<input type="text" name="firstName" value="">
+		<label>last name:</label>
+		<input type="text" name="lastName" value="">
+		<input type="submit" value="submit">
+	</form>
+	<div>
+		Inviteded guest:-{total}, -{pluseoneTotal}
+		{#pluseoneTotal}
+			{first} {last}
+		{/pluseoneTotal}
+	</div>
+	<h2>current guests list</h2>
+	{guests}
+	<ul>
+		{#guests}
+		<li>{#name} {first} {last} {/name}</li>
+		{/guests}
+	</ul>
+{/content}
