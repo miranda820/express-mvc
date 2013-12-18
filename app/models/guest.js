@@ -23,7 +23,6 @@ GuestSchema.statics = {
 		  	{ $project : {
 		        first : '$name.first' 
 		    }}, function(err, db) {
-		    	console.log('finish');
 		    	console.log(db);
 		    	cb(err, db);
 		    })
