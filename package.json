@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "app.js"
+    "start": "NODE_ENV=development ./node_modules/.bin/nodemon app.js",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --reporter spec test/test-*.js"
   },
   "dependencies": {
     "express": "~3.3.4",
@@ -11,13 +12,19 @@
     "consolidate": "~0.10.0",
     "dustjs-linkedin": "~2.2.0",
     "dustjs-helpers": "~1.1.1",
-    "express-validator": "~1.0.1"
+    "async": "latest",
+    "view-helpers": "latest",
+    "forever": "latest",
+    "mongoose-validator": "~0.2.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-develop": "~0.1.1",
     "grunt-contrib-watch": "~0.4.4",
     "grunt-contrib-compass": "~0.2.0",
-    "request": "~2.22.0"
+    "supertest": "latest",
+    "should": "latest",
+    "mocha": "latest",
+    "nodemon": "latest"
   }
 }

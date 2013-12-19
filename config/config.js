@@ -8,7 +8,7 @@ var config = {
     app: {
       name: 'express-mvc'
     },
-    port: 9000,
+    port: 8000,
     db: 'mongodb://localhost/wedding-dev'
   },
 
@@ -17,7 +17,7 @@ var config = {
     app: {
       name: 'express-mvc'
     },
-    port: 9000,
+    port: 8000,
     db: 'mongodb://localhost/wedding-test'
   },
 
@@ -26,7 +26,7 @@ var config = {
     app: {
       name: 'express-mvc'
     },
-    port: 9000,
+    port: 8000,
     db: 'mongodb://localhost/wedding-production'
   }
 };

@@ -22,3 +22,5 @@ require('./config/express')(app, config);
 require('./config/routes')(app, mongoose);
 
 app.listen(config.port);
+
+exports = module.exports = app

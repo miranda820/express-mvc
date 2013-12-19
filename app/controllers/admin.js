@@ -1,5 +1,7 @@
 var mongoose = require('mongoose'),
-  Guest = mongoose.model('Guest');
+	Invite = mongoose.model('Invite'),
+	Guest = mongoose.model('Guest'),
+	utils = require('../../lib/utils');
 
 exports.index = function(req, res){
 	Guest.find(function(err, guests){
@@ -38,4 +40,26 @@ exports.index = function(req, res){
 	    });
 	})*/
 };
+
+
+exports.creatUser = function (req, res) {  
+
+	var guest = new Guest (req.body);
+	guest.save(function (err) {
+
+		if(err) {
+			return res.send( {
+				status: 'error',
+				errors: utils.errors(err.errors),
+				guest: guest,
+			})
+		}
+
+		return res.send({
+			status: 'success',
+			guest: guest,
+		})
+
+	})
+}
 
