@@ -57,7 +57,11 @@ exports.checkUser = function(req, res){
 	      title: 'M&M are getting married!',
 	      guests: guests
 	    });*/
-	}
+	  }
 
   });
 };
+
+exports.update = function (req, res) {
+  // body...
+}

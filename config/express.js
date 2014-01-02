@@ -25,7 +25,8 @@ module.exports = function(app, config, passport) {
 			store: new mongoStore({
 				url: config.db,
 				collection : 'sessions'
-			})
+			}),
+			cookie: {httpOnly: true, secure:true}
 	    }));
 
 	    // use passport session

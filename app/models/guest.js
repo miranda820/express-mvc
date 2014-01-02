@@ -6,13 +6,12 @@ var mongoose = require('mongoose'),
 
 var nameValidate = [ validate('isAlphanumeric'), validate({message: 'name cannot be blank'}, 'notEmpty')];
 var GuestSchema = new Schema({
-	_invite:{type:Schema.ObjectId, ref:'Invite'},
 	firstName: { type: String, trim: true, validate:nameValidate },
 	lastName: { type: String, trim: true, validate:nameValidate },
 	entree: String, // will be a document
-	songs:{ name: {type:String, trim:true},
+	songs:[{ name: {type:String, trim:true},
 			artist: {type:String, trim:true}
-	},
+	}],
 	table: Number
 });
 

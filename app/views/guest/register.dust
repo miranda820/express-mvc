@@ -2,7 +2,7 @@
 	{>layout/}
 	{<content}
 
-		<form action="" method="POST">
+		<form action="guest/update" method="POST">
 			<label>Email</label>
 			<input type="email" name="email" value="">
 			<label>address</label>

@@ -17,12 +17,15 @@ module.exports = function(app, passport, mongoose){
 	app.get('/logout', guest.logout);
 
 	//user
+
 	app.post('/guest/session',passport.authenticate('local', {
       failureRedirect: '/guest/fail'
     }), function(req, res) {
+    		//returns json
 			invite.checkRegistration(req, res);
     });
 
+	app.post('/guest/update', auth.requiresLogin, guest.update)
 	app.get('/guest/fail', function(req, res) {
 		return res.send({
 			status: 'error',
@@ -36,5 +39,7 @@ module.exports = function(app, passport, mongoose){
 	
 
 	app.get('/details',auth.requiresLogin, invite.index);	
+
+	app.get('/profile',auth.requiresLogin, profile.index);	
 
 };

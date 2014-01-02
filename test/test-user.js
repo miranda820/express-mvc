@@ -6,10 +6,10 @@ var mongoose = require('mongoose'),
   	Guest = mongoose.model('Guest');
 
 
-describe('Submit guests', function () {
+describe('create guests', function () {
 	it ('No first name - should responds with error', function (done) {
 		request(app)
-		.post('/user/create')
+		.post('/guest/create')
 		.field('firstName','*')
 		.field('lastName','li')
 		//.expect('Content-Type', /html/)
@@ -20,7 +20,7 @@ describe('Submit guests', function () {
 
 	it ('No last name - should responds with error', function (done) {
 		request(app)
-		.post('/user/create')
+		.post('/guest/create')
 		.field('firstName','Miranda')
 		.field('lastName','')
 		//.expect('Content-Type', /html/)
@@ -30,3 +30,7 @@ describe('Submit guests', function () {
 	})
 
 });
+
+//user login 
+
+describe('user')
