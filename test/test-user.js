@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 describe('Submit guests', function () {
 	it ('No first name - should responds with error', function (done) {
 		request(app)
-		.post('/api/guests')
+		.post('/user/create')
 		.field('firstName','*')
 		.field('lastName','li')
 		//.expect('Content-Type', /html/)
@@ -20,13 +20,13 @@ describe('Submit guests', function () {
 
 	it ('No last name - should responds with error', function (done) {
 		request(app)
-		.post('/api/guests')
+		.post('/user/create')
 		.field('firstName','Miranda')
 		.field('lastName','')
 		//.expect('Content-Type', /html/)
-        .expect(200)
-        .expect(/name cannot be blank/)
-        .end(done)
+		.expect(200)
+		.expect(/name cannot be blank/)
+		.end(done)
 	})
 
 });

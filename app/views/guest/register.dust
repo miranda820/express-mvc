@@ -1,0 +1,44 @@
+{?renderLayout}
+	{>layout/}
+	{<content}
+
+		<form action="" method="POST">
+			<label>Email</label>
+			<input type="email" name="email" value="">
+			<label>address</label>
+			<input type="text" name="address" value="">
+			<input type="text" name="address1" value="">
+			<label>City</label>
+			<input type="text" name="city" value="">
+			<lable>State</lable>
+			<select name="state">
+				<option>NY</option>
+				<option>OH</option>
+				<option>KY</option>
+			</select>
+			<lable>Zipcode</lable>
+			<input type="text" value=""/>
+			<input type="submit" value="submit">
+		</form>
+	{/content}
+{:else}
+
+	<form action="" method="POST">
+		<label>Email</label>
+		<input type="email" name="email" value="">
+		<label>address</label>
+		<input type="text" name="address" value="">
+		<input type="text" name="address1" value="">
+		<label>City</label>
+		<input type="text" name="city" value="">
+		<lable>State</lable>
+		<select name="state">
+			<option>NY</option>
+			<option>OH</option>
+			<option>KY</option>
+		</select>
+		<lable>Zipcode</lable>
+		<input type="text" value=""/>
+		<input type="submit" value="submit">
+	</form>
+{/renderLayout}

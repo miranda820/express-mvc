@@ -1,6 +1,6 @@
 {>layout/}
 {<content}
-	<form action="/api/guests" method="POST">
+	<form action="/guest/create" method="POST">
 		<label>first name:</label>
 		<input type="text" name="firstName" value="">
 		<label>last name:</label>

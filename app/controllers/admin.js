@@ -51,7 +51,7 @@ exports.creatUser = function (req, res) {
 			return res.send( {
 				status: 'error',
 				errors: utils.errors(err.errors),
-				guest: guest,
+				guest: guest
 			})
 		}
 

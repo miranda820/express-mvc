@@ -12,7 +12,7 @@ var InviteSchema = new Schema({
 	city: String,
 	state: String,// will be sub document
 	zipcode: String,
-	rsvp: {type:Boolean, default: false},
+	rsvp: {type:Boolean, default: false}
 })
 
 

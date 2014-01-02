@@ -2,13 +2,11 @@
 <html>
 	<head>
 		<title>{title}</title>
-		<link rel='stylesheet' href='/stylesheets/style.css' />
+		<link rel='stylesheet' href='/css/app.css' />
 	</head>
 	<body>
-		<h1>{title}</h1>
-				{+content}
-								This is the base content.
-				{/content}
+		{+content}
+		{/content}
 	</body>
 <!--
 {session}
