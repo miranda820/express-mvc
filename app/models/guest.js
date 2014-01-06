@@ -2,6 +2,7 @@
 
 var mongoose = require('mongoose'),
 	Schema = mongoose.Schema,
+	crypto = require('crypto'),
 	validate = require('mongoose-validator').validate;
 
 var nameValidate = [ validate('isAlphanumeric'), validate({message: 'name cannot be blank'}, 'notEmpty')];
@@ -12,33 +13,16 @@ var GuestSchema = new Schema({
 	songs:[{ name: {type:String, trim:true},
 			artist: {type:String, trim:true}
 	}],
-	table: Number
+	table: Number,
+	isPrimary: {type:Boolean, default: false},
+	isAdmin: {type:Boolean, default: false}
 });
-
 
 
 GuestSchema.virtual('date')
   .get(function(){
     return this._id.getTimestamp();
   });
-
-/**
- * validation
- */
-
-
-/*GuestSchema.path('firstName').validate(function (firstName) {
-  // if you are authenticating by any of the oauth strategies, don't validate
-  console.log('firstName',firstName.length);
-  return firstName.length > 0
-}, 'first name cannot be blank');
-
-
-GuestSchema.path('lastName').validate(function (lastName) {
-  // if you are authenticating by any of the oauth strategies, don't validate
-  console.log('lastName',lastName.length);
-  return lastName.length > 0
-}, 'last name cannot be blank');*/
 
 
 /**
@@ -57,9 +41,21 @@ GuestSchema.statics = {
 		    	cb(err, db);
 		    })
 
-		}
+	},
+
+	getPlusx: function(cb) {
+		this.find({isPrimary: false}, cb);
+	},
+
+	isAdmin:function(firstName, lastName, cb) {
+		this.findOne({firstName:firstName, lastName: lastName, isAdmin: true}, cb);	
+	}
 }
 
 
+
 mongoose.model('Guest', GuestSchema);
+
+
+
 

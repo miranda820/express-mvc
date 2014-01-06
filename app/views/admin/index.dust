@@ -1,23 +1,44 @@
 {>layout/}
 {<content}
-	<form action="/guest/create" method="POST">
-		<label>first name:</label>
-		<input type="text" name="firstName" value="">
-		<label>last name:</label>
-		<input type="text" name="lastName" value="">
-		<input type="submit" value="submit">
-	</form>
-	<div>
-		Inviteded guest:-{total}, -{pluseoneTotal}
-		{#pluseoneTotal}
-			{first} {last}
-		{/pluseoneTotal}
-	</div>
-	<h2>current guests list</h2>
-	{guests}
-	<ul>
-		{#guests}
-		<li>{#name} {first} {last} {/name}</li>
-		{/guests}
-	</ul>
+	{?permission}
+	create admin:
+		<form action="/admin/create" method="POST">
+			<label>first name:</label>
+			<input type="text" name="firstName" value="">
+			<label>last name:</label>
+			<input type="text" name="lastName" value="">
+			<input type="submit" value="submit">
+		</form>
+
+	<br/>
+	<br/>
+		<form action="/guest/create" method="POST">
+			<label>first name:</label>
+			<input type="text" name="firstName" value="">
+			<label>last name:</label>
+			<input type="text" name="lastName" value="">
+			<input type="submit" value="submit">
+		</form>
+		<div>
+			
+			total invites:{totalInvite}<br/>
+			total plus one:{pluseoneTotal}<br/>
+			total guests:{total}, <br/>
+			{#pluseoneTotal}
+				{first} {last}
+			{/pluseoneTotal}
+		</div>
+		<h2>current guests list</h2>
+		{invites}
+		<ul>
+			{#invites}
+			<li>{primary.firstName} {primary.lastName}  pluse one: {#plusx} {firstName} {lastName}{/plusx} registered: yes 
+				rsvp:{?rsvp} yes{:else} no {/rsvp}
+
+			</li>
+			{/invites}
+		</ul>
+		{:else}
+			{error}
+		{/permission}
 {/content}

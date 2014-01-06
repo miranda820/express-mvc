@@ -26,7 +26,7 @@ module.exports = function(app, config, passport) {
 				url: config.db,
 				collection : 'sessions'
 			}),
-			cookie: {httpOnly: true, secure:true}
+			cookie: {}
 	    }));
 
 	    // use passport session

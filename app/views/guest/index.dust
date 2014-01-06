@@ -1,0 +1,15 @@
+{>layout/}
+{<content}
+ this is {#guest} {firstName} {lastName} {/guest}
+ 	{!for primary user only!}
+	{?showPrimary}
+
+		TODO when invite is null<br/>
+		
+		{#plusx}
+			plus one: {firstName} {lastName} <br/>
+		{/plusx}
+		{invite}
+		{>"guest/register"/}
+	{/showPrimary}
+{/content}

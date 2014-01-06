@@ -1,17 +1,19 @@
 // Example model
 
 var mongoose = require('mongoose'),
-  Schema = mongoose.Schema;
+	validate = require('mongoose-validator').validate,
+	Schema = mongoose.Schema;
 
+var isEmail = validate({message: 'Invalid Email'}, 'isEmail');
 var InviteSchema = new Schema({
 	primary:{type:Schema.ObjectId, ref:'Guest'},
-	plusX:[{type:Schema.ObjectId, ref:'Guest'}],
-	email: String,
-	address: String,
+	plusx:[{type:Schema.ObjectId, ref:'Guest'}],
+	email: { type: String, validate:isEmail },
+	address: { type: String, trim:true, validate: validate({message: 'Address cannot be blank'}, 'notEmpty')},
 	address2:String,
-	city: String,
+	city: { type: String, trim:true, validate: validate({message: 'City cannot be blank'}, 'notEmpty')},
 	state: String,// will be sub document
-	zipcode: String,
+	zipcode: { type: String, trim:true, validate: validate({message: 'invalid zipcode'}, 'regex', /^\d{5}(?:[-\s]\d{4})?$/i )},
 	rsvp: {type:Boolean, default: false}
 })
 
@@ -21,6 +23,9 @@ InviteSchema.virtual('date')
     return this._id.getTimestamp();
   });
 
+InviteSchema.methods = {
+
+}
 /**
  * validation
  */
@@ -46,7 +51,21 @@ InviteSchema.statics = {
 		    	cb(err, db);
 		    })
 
-		}
+	},
+
+	getPlusx: function(_id, cb) {
+		this.findOne({primary: _id})
+		.populate('plusx')
+		.exec(cb);
+	},
+	
+	populateAll: function(cb) {
+	 	this.find()
+	 	.populate('primary plusx')
+		.exec(cb);
+
+	}
+
 }
 
 mongoose.model('Invite', InviteSchema);

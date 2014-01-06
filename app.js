@@ -20,7 +20,7 @@ fs.readdirSync(modelsPath).forEach(function (file) {
 var app = express();
 require('./config/passport')(passport, config);
 require('./config/express')(app, config, passport);
-require('./config/routes')(app, passport);
+require('./config/routes')(app, passport, config);
 
 app.listen(config.port);
 

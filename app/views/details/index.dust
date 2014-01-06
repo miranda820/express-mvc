@@ -1,4 +1,7 @@
 {>layout/}
 {<content}
-	detials page
+	detials page 
+	{#guest}
+		{firstName} {lastName}
+	{/guest}
 {/content}
