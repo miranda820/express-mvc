@@ -1,7 +1,15 @@
 {>layout/}
 {<content}
-	-{message}
-	<form action="/guest/session" method="POST">
+	<form action="/guest/login" method="POST">
+		<label>email</label>
+		<input type="text" name="email" value="">
+		<label>password:</label>
+		<input type="password" name="password" value="">
+		<input type="submit" value="submit">
+
+	</form>
+
+	<form action="/guest/register" method="POST">
 		<label>first name:</label>
 		<input type="text" name="firstName" value="">
 		<label>last name:</label>

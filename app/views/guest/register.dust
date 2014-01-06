@@ -1,8 +1,14 @@
+{?renderPrimaryForm}
 
-
-<form action="invite/update" method="POST">
+<form action="/invite/create" method="POST">
+	<input name="firstName" value="{firstName}">
+	<input name="lastName" value="{lastName}">
+	<label> is coming </label>
+	<input type="checkbox" name="isComing" checked="checked">
 	<label>Email</label>
 	<input  name="email" value="">
+	<label>password</label>
+	<input  type="password" name="password" value="">
 	<label>address</label>
 	<input type="text" name="address" value="">
 	<input type="text" name="address1" value="">
@@ -19,8 +25,7 @@
 	<input type="submit" value="submit">
 </form>
 
-
-<form action="guest/addplusx" method="POST">
+<form action="/guest/addplusx" method="POST">
 	Plus one:
 	<label>first name:</label>
 	<input type="text" name="firstName" value="">
@@ -28,3 +33,17 @@
 	<input type="text" name="lastName" value="">
 	<input type="submit" value="submit">
 </form>
+
+{/renderPrimaryForm}
+
+{?renderPlusOneForm}
+<form action="/invite/create" method="POST">
+	<input name="firstName" value="{firstName}">
+	<input name="lastName" value="{lastName}">
+	<label>Email</label>
+	<input  name="email" value="">
+	<label>password</label>
+	<input  type="password" name="password" value="">
+	<input type="submit" value="submit">
+</form>
+{/renderPlusOneForm}

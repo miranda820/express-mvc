@@ -20,15 +20,20 @@ exports.session = login;
  * Login
  */
 exports.login = function(req, res){
-  console.log('check signin', req.session);
+  console.log('check signin', req.currentUser);
   if(req.user) {
     res.redirect('/details')
   }
   res.render('home/index', {
-      title: 'M&M are getting married!',
-      message: req.flash('error')
+      title: 'M&M are getting married!'
     });
 };
+
+exports.loginFrom = function (req, res) {
+    res.render('login', {
+        title: 'M&M are getting married!'
+      });
+}
 
 /*exports.logout = function (req, res) {
   req.session.destroy();
@@ -40,27 +45,21 @@ exports.logout = function (req, res) {
   res.redirect('/');
 };
 
-exports.checkUser = function(req, res){
-  Guest.find(req.body, function(err, guests){
+exports.checkUser = function(req, res,next){
+  Guest.findOne(req.body, function(err, guests){
 
-  	console.log('test', guests.length);
     if(err) throw new Error(err);
-
-    if(guests.length < 1) {
-
-    	return res.render( 'home/index',{
-    			title: 'M&M are getting married!',
-				  contact: 'We can\'t find you, Please contact M&M'
-			});
-
-    } else {
-    	console.log('check signin', req.session);
-    	signin(req, res);
-	   /* return res.render('home/index', {
-	      title: 'M&M are getting married!',
-	      guests: guests
-	    });*/
-	  }
+    // if use doesn't exit send user message
+    if(!guests) {
+    	return res.send({
+        status:'error',
+        errors: {
+          message: 'Hummm, can\'t find you on the guest list, please contact M and M'
+        }
+      })
+    } 
+    req.currentUser = guests;
+    return next();
 
   });
 };

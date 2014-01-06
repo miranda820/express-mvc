@@ -9,42 +9,59 @@ var mongoose = require('mongoose'),
 
 //see if guest has entered address
 exports.checkRegistration = function(req, res){
-	function redirect (req, res, status) {
-		return res.send( 'wedding/index',{
-						status:status,
-						redirect:'/details'
-				});
-	}
-	if(req.user.isPrimary)	{
-		Invite.findOne({primary: req.user._id}, function(err, invite){
+	var thisGuest = req.currentUser
+	console.log(req.currentUser);
+	// is the guest is primary
+	if(thisGuest.isPrimary)	{
+		Invite.findOne({primary: thisGuest._id}, function(err, invite){
 			if(err) throw new Error(err);
 			if(!invite) {
-				return res.render('guest/register',{renderLayout: false}, function(err, html) {
-					//var hour = 3600000;
-		 		    //req.session.cookie.expires = new Date(Date.now() + hour);
+				return res.render('guest/register',{
+					renderPrimaryForm: true,
+					renderLayout: false,
+					firstName: thisGuest.firstName,
+					lastName: thisGuest.lastName
 
-					console.log('session', req.session);
+				}/*, function(err, html) {
+
 					var response = {
 						status:'not registered',
 						html:html
 					}
 					res.send(response);
-				});
+				}*/);
 				
-
 			} else {
-				return res.send( 'wedding/index',{
+				return res.send({
 						status:'registered',
-						redirect:'/details'
+						redirect:'/login'
 				});
-
-				redirect (req, res, 'registered')
 			}
 		});
 	} else {
-		redirect (req, res, 'plusx')
+		if(thisGuest.hash_password) {
+			//is the guest is a plus one
+			return res.redirect('/login');
+		} 
+
+		return res.render('guest/register',{
+			renderPlusOneForm: true,
+			renderLayout: false,
+			firstName: thisGuest.firstName,
+			lastName: thisGuest.lastName
+		}/*, function (err, html ) {
+			var response = {
+				status:'not registered',
+				html:html
+			}
+			res.send(response);
+		}*/)
+		
 	}
 };
+
+
+
 
 exports.index = function(req, res) {
 	console.log(res.user);
@@ -53,11 +70,7 @@ exports.index = function(req, res) {
 		guest: req.user
 	})
 }
-
-
-exports.update = function (req, res) {
-
-	function response (err, invite) {
+function response (err, invite) {
 		if(err) {
 			return res.send( {
 				status: 'error',
@@ -71,6 +84,10 @@ exports.update = function (req, res) {
 			invite: invite
 		})
 	}
+
+exports.update = function (req, res) {
+
+	
 	/*function sanitizeData (data) {
 		for (prop in data) {
 			if(data.hasOwnProperty(prop)) {
@@ -109,5 +126,19 @@ exports.update = function (req, res) {
 		//
 
 	}
+
+}
+
+exports.create = function (req, res) {
+	Guest.findOne({firstName: req.body.firstName, lastName: req.body.lastName}, function(err, guest) {
+
+		console.log('Guest', guest)
+		if(guest){
+			guest = _.extend(guest, req.body);
+			invite.save(function (err, invite) {
+					response(err, invite);
+			});
+		}
+	})
 
 }
