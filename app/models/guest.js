@@ -5,29 +5,45 @@ var mongoose = require('mongoose'),
 	crypto = require('crypto'),
 	validate = require('mongoose-validator').validate;
 
-var nameValidate = [ validate('isAlphanumeric'), validate({message: 'name cannot be blank'}, 'notEmpty')],
+var ValidationError = require('mongoose/lib/errors/validation');
+var ValidatorError =  require('mongoose/lib/errors/validator');
+
+
+var nameValidate = [ validate("regex",/^[a-z ,.-]+$/i), validate({message: 'name cannot be blank'}, 'notEmpty')],
 	isEmail = validate({message: 'Invalid Email'}, 'isEmail');
 var GuestSchema = new Schema({
-	firstName: { type: String, trim: true, validate:nameValidate },
-	lastName: { type: String, trim: true, validate:nameValidate },
-	email: { type: String, validate:isEmail },
-	hashed_password: { type: String, default: '', validate: validate({message: 'name cannot be blank'}, 'notEmpty')},
+	guestId:{type:Schema.ObjectId, ref:'GuestList'},
+	hashed_password: { type: String, default: ''},
   	salt: { type: String, default: '' },
 	entree: String, // will be a document
 	songs:[{ name: {type:String, trim:true},
 			artist: {type:String, trim:true}
 	}],
 	table: Number,
-	isComing: {type:Boolean, default:true},
-	isPrimary: {type:Boolean, default: false},
 	isAdmin: {type:Boolean, default: false}
 });
 
 
-GuestSchema.virtual('date')
-  .get(function(){
-    return this._id.getTimestamp();
-  });
+
+
+GuestSchema.pre('save', function(next) {
+	 var Guest = mongoose.model('Guest');
+	 Guest.findOne({ email: this.email }, function(err, guest) {
+	 	console.log(guest);
+	 	if(guest) {
+	 		error = new ValidationError(this);
+		    error.errors.email = new ValidatorError('email', 'already exist', this.email);
+			next(error);	
+	 	} 
+	 	return next();
+	 })
+    
+})
+
+// GuestSchema.virtual('date')
+//   .get(function(){
+//     return this._id.getTimestamp();
+//   });
 
 GuestSchema
   .virtual('password')
@@ -38,9 +54,27 @@ GuestSchema
   })
   .get(function() { return this._password })
 
+
+GuestSchema.methods = {
+	makeSalt: function () {
+		return Math.round((new Date().valueOf() * Math.random())) + ''
+	},
+	encryptPassword: function (password) {
+		if (!password) return ''
+		
+		var encrypred
+		try {
+			encrypred = crypto.createHmac('sha1', this.salt).update(password).digest('hex')
+			return encrypred
+		} catch (err) {
+			return ''
+		}
+	}
+}
 /**
  * Statics
  */
+
 
 GuestSchema.statics = {
 
@@ -64,7 +98,7 @@ GuestSchema.statics = {
 		this.findOne({firstName:firstName, lastName: lastName, isAdmin: true}, cb);	
 	},
 
-	
+
 	 /**
    * Authenticate - check if the passwords are the same
    *

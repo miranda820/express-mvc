@@ -70,7 +70,7 @@ exports.index = function(req, res) {
 		guest: req.user
 	})
 }
-function response (err, invite) {
+function response (req, res, err, invite) {
 		if(err) {
 			return res.send( {
 				status: 'error',
@@ -111,14 +111,14 @@ exports.update = function (req, res) {
 					invitation = new Invite( guestInfo);
 
 				invitation.save(function (err) {
-					response(err, invite);
+					response(req, res, err, invite);
 				});
 
 			} else {
 
 				var invite = _.extend(invite, req.body);
 				invite.save(function (err) {
-					response(err, invite);
+					response(req, res, err, invite);
 				});
 			}
 		});
@@ -129,16 +129,23 @@ exports.update = function (req, res) {
 
 }
 
-exports.create = function (req, res) {
-	Guest.findOne({firstName: req.body.firstName, lastName: req.body.lastName}, function(err, guest) {
-
-		console.log('Guest', guest)
+exports.create = function (req, res,next) {
+	var guestList = req.profile;
+	console.log(req.profile._id);
+	/*Guest.findOne({firstName: req.body.firstName, lastName: req.body.lastName}, function(err, guest) {
 		if(guest){
 			guest = _.extend(guest, req.body);
-			invite.save(function (err, invite) {
-					response(err, invite);
+			guest.save(function (err, guest) {
+					response(req, res, err, guest);
 			});
+		} else {
+			return req.send({
+				status:'error',
+				errors: {
+					message:'guest doesn\'t exist'
+				}
+			})
 		}
-	})
+	})*/
 
 }

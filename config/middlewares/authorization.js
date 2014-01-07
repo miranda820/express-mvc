@@ -29,7 +29,6 @@ exports.requiresLogin = function (req, res, next) {
         return res.redirect('/admin')
       }
 
-        
     })
   }
 

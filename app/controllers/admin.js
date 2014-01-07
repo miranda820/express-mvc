@@ -1,7 +1,7 @@
 var mongoose = require('mongoose'),
 	_ = require('underscore'),
 	Invite = mongoose.model('Invite'),
-	Guest = mongoose.model('Guest'),
+	GuestList = mongoose.model('GuestList'),
 	async = require('async'),
 	utils = require('../../lib/utils');
 
@@ -78,12 +78,12 @@ exports.signin = function (req,res){
 			});
 }
 
-exports.createUser = function (req, res) {  
+exports.createGuest = function (req, res) {  
 	checkAdmin (req, res, function() {
 			var newUser = _.extend(req.body, {isPrimary : true}),
-				guest = new Guest (newUser);
+				guestList = new GuestList (newUser);
 
-			guest.save(function (err) {
+			guestList.save(function (err, guest) {
 
 				if(err) {
 					return res.send( {

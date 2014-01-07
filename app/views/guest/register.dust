@@ -1,8 +1,6 @@
-{?renderPrimaryForm}
+{?isPrimary}
 
-<form action="/invite/create" method="POST">
-	<input name="firstName" value="{firstName}">
-	<input name="lastName" value="{lastName}">
+<form action="/api/invite/create/{guestId}" method="POST">
 	<label> is coming </label>
 	<input type="checkbox" name="isComing" checked="checked">
 	<label>Email</label>
@@ -24,19 +22,19 @@
 	<input type="text" name= "zipcode" value=""/>
 	<input type="submit" value="submit">
 </form>
+	{?rsvp}
+	<form action="api/guest/addplusx" method="POST">
+		Plus one:
+		<label>first name:</label>
+		<input type="text" name="firstName" value="">
+		<label>last name:</label>
+		<input type="text" name="lastName" value="">
+		<input type="submit" value="submit">
+	</form>
+	{/rsvp}
 
-<form action="/guest/addplusx" method="POST">
-	Plus one:
-	<label>first name:</label>
-	<input type="text" name="firstName" value="">
-	<label>last name:</label>
-	<input type="text" name="lastName" value="">
-	<input type="submit" value="submit">
-</form>
-
-{/renderPrimaryForm}
-
-{?renderPlusOneForm}
+{:else}
+	
 <form action="/invite/create" method="POST">
 	<input name="firstName" value="{firstName}">
 	<input name="lastName" value="{lastName}">
@@ -46,4 +44,5 @@
 	<input  type="password" name="password" value="">
 	<input type="submit" value="submit">
 </form>
-{/renderPlusOneForm}
+{/isPrimary}
+

@@ -6,8 +6,8 @@ var mongoose = require('mongoose'),
 
 var isEmail = validate({message: 'Invalid Email'}, 'isEmail');
 var InviteSchema = new Schema({
-	primary:{type:Schema.ObjectId, ref:'Guest'},
-	plusx:[{type:Schema.ObjectId, ref:'Guest'}],
+	primary:{type:Schema.ObjectId, ref:'GuestList'},
+	plusx:[{type:Schema.ObjectId, ref:'GuestList'}],
 	address: { type: String, trim:true, validate: validate({message: 'Address cannot be blank'}, 'notEmpty')},
 	address2:String,
 	city: { type: String, trim:true, validate: validate({message: 'City cannot be blank'}, 'notEmpty')},
