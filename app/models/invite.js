@@ -6,13 +6,13 @@ var mongoose = require('mongoose'),
 
 var isEmail = validate({message: 'Invalid Email'}, 'isEmail');
 var InviteSchema = new Schema({
-	primary:{type:Schema.ObjectId, ref:'GuestList'},
+	primary:{type:Schema.ObjectId, ref:'GuestList', required: true},
 	plusx:[{type:Schema.ObjectId, ref:'GuestList'}],
-	address: { type: String, trim:true, validate: validate({message: 'Address cannot be blank'}, 'notEmpty')},
+	address: { type: String, trim:true, required: true},
 	address2:String,
-	city: { type: String, trim:true, validate: validate({message: 'City cannot be blank'}, 'notEmpty')},
+	city: { type: String, trim:true, required: true},
 	state: String,// will be sub document
-	zipcode: { type: String, trim:true, validate: validate({message: 'invalid zipcode'}, 'regex', /^\d{5}(?:[-\s]\d{4})?$/i )},
+	zipcode: { type: String, trim:true, required: true,validate: validate({message: 'invalid zipcode'}, 'regex', /^\d{5}(?:[-\s]\d{4})?$/i )},
 	rsvp: {type:Boolean, default: false}
 })
 

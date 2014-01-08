@@ -12,7 +12,7 @@
 
 	<br/>
 	<br/>
-		<form action="/api/guest/create" method="POST">
+		<form action="/api/guestlist/create" method="POST">
 			<label>first name:</label>
 			<input type="text" name="firstName" value="">
 			<label>last name:</label>

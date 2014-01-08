@@ -27,14 +27,16 @@ module.exports = function(app, passport, mongoose){
 	//api
 	//
 	//api/guest/check  comes back with json with html or error 
-	app.post('/api/guest/check', guestlist.checkGuest);
+	app.post('/api/guestlist/check', guestlist.checkGuest);
 
 	//auth needed before create
-	app.post('/api/guest/create',  admin.createGuest);
+	app.post('/api/guestlist/create',  admin.createGuest);
 	app.post('/api/invite/create/:guestId', invite.create);
+	
+
+	app.post('/api/guest/create/:guestId', guest.create);
+
 	app.param('guestId', guestlist.guestID)
-
-
 
 	app.post('/guest/addplusx',auth.requiresLogin, guest.addplusx);
 	// route

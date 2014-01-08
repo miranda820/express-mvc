@@ -1,6 +1,6 @@
 {>layout/}
 {<content}
-	<form action="api/guest/check" method="POST">
+	<form action="api/guestlist/check" method="POST">
 		<label>email</label>
 		<input type="text" name="email" value="">
 		<input type="submit" value="submit">

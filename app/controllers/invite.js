@@ -2,6 +2,7 @@ var mongoose = require('mongoose'),
 	_ = require('underscore'),
 	//sanitize = require('mongoose-validator').sanitize,
 	utils = require('../../lib/utils'),
+	GuestList = mongoose.model('GuestList'),
 	Guest = mongoose.model('Guest'),
 	Invite = mongoose.model('Invite');
 
@@ -130,22 +131,30 @@ exports.update = function (req, res) {
 }
 
 exports.create = function (req, res,next) {
-	var guestList = req.profile;
-	console.log(req.profile._id);
-	/*Guest.findOne({firstName: req.body.firstName, lastName: req.body.lastName}, function(err, guest) {
-		if(guest){
-			guest = _.extend(guest, req.body);
-			guest.save(function (err, guest) {
-					response(req, res, err, guest);
+	var thisGuest = req.profile;
+
+
+	//check invite exists
+	Invite.findOne({primary: thisGuest._id}).exec(function(err, invite) {
+
+		if(!invite) {
+			var data = _.extend(req.body, {primary: thisGuest._id} ),
+				invite = new Invite(data);
+
+			invite.save(function(err, invite){
+				response(req,res, err, invite);
 			});
+
 		} else {
-			return req.send({
-				status:'error',
-				errors: {
-					message:'guest doesn\'t exist'
-				}
+			return res.send({
+				status: 'error',
+				errors: utils.errors(err.errors),
+				invite: invite
 			})
 		}
-	})*/
+	})
+	
+
+
 
 }

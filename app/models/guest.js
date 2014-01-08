@@ -12,8 +12,8 @@ var ValidatorError =  require('mongoose/lib/errors/validator');
 var nameValidate = [ validate("regex",/^[a-z ,.-]+$/i), validate({message: 'name cannot be blank'}, 'notEmpty')],
 	isEmail = validate({message: 'Invalid Email'}, 'isEmail');
 var GuestSchema = new Schema({
-	guestId:{type:Schema.ObjectId, ref:'GuestList'},
-	hashed_password: { type: String, default: ''},
+	guestId:{type:Schema.ObjectId, ref:'GuestList', required: true, validate:validate({message: 'name cannot be blank'}, 'notEmpty')},
+	hashed_password: { type: String, default: '', required: true, validate:validate({message: 'password cannot be blank'}, 'notEmpty')},
   	salt: { type: String, default: '' },
 	entree: String, // will be a document
 	songs:[{ name: {type:String, trim:true},
@@ -28,7 +28,7 @@ var GuestSchema = new Schema({
 
 GuestSchema.pre('save', function(next) {
 	 var Guest = mongoose.model('Guest');
-	 Guest.findOne({ email: this.email }, function(err, guest) {
+	 Guest.findOne({ guestId: this.guestId }, function(err, guest) {
 	 	console.log(guest);
 	 	if(guest) {
 	 		error = new ValidationError(this);

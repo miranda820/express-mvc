@@ -20,16 +20,16 @@ exports.checkGuest = function  (req, res) {
 								email: req.body.email,
 								renderLayout: false
 
-							} //TODO send json back
+							} //TODO send json html back
 						);
 				 } else {
 						//guest is not registered
 						//
 						return res.render('guest/register',{
 								renderLayout: false,
-								isPrimary: guest.isPrimary,
+								createPW: true,
 								guestId: guest._id
-							} //TODO send json back
+							} //TODO send json html back
 						);
 
 				 }
@@ -52,7 +52,15 @@ exports.guestID = function (req, res, next, id) {
 	GuestList.findOne({ _id : id })
 		.exec(function (err, user) {
 			if (err) return next(err)
-			if (!user) return next(new Error('Failed to load User ' + id))
+			if (!user) {
+				return res.send({
+					status:'error',
+					errors: {
+						message:'guest doesn\'t exist'
+					}
+				})
+			}
+
 			req.profile = user
 			next()
 		})
