@@ -13,6 +13,19 @@ exports.requiresLogin = function (req, res, next) {
   next();
 }
 
+exports.requiresAdmin = function(req, res, next) {
+  if (!req.isAuthenticated()) {
+    //req.session.returnTo = req.originalUrl
+    return res.redirect('/admin/login')
+  } else {
+
+    console.log('------', req.user);
+    if(req.user.isAdmin) {
+      return next();
+    }
+    return res.render('404');
+  }
+}
 /*exports.requireAdmin = function(req, res,next) {
  if (!req.isAuthenticated()) {
     console.log('req.user', req)

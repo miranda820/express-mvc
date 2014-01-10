@@ -2,8 +2,7 @@ var mongoose = require('mongoose'),
 	utils = require('../../lib/utils'),
 	_ = require('underscore'),
 	guest = require('../../app/controllers/guest')
-	GuestList = mongoose.model('GuestList'),
-	Guest = mongoose.model('Guest');
+	GuestList = mongoose.model('GuestList');
 
 
 

@@ -3,10 +3,10 @@
 	{?permission}
 	create admin:
 		<form action="/admin/create" method="POST">
-			<label>first name:</label>
-			<input type="text" name="firstName" value="">
-			<label>last name:</label>
-			<input type="text" name="lastName" value="">
+			<label>email</label>
+			<input type="text" name="email" value="">
+			<label>password</label>
+			<input type="password" name="password" value="">
 			<input type="submit" value="submit">
 		</form>
 

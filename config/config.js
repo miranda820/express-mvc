@@ -11,7 +11,11 @@ var config = {
     },
     port: 8000,
     db: 'mongodb://localhost/wedding-dev',
-    phase:phase
+    phase:phase,
+    admin: {
+      email:'admin@localhost.com',
+      password:'admin'
+    }
   },
 
   test: {
@@ -21,7 +25,11 @@ var config = {
     },
     port: 8000,
     db: 'mongodb://localhost/wedding-test',
-    phase:phase
+    phase:phase,
+    admin: {
+      email:'admin@localhost.com',
+      password:'admin'
+    }
   },
 
   production: {
@@ -31,7 +39,11 @@ var config = {
     },
     port: 8000,
     db: 'mongodb://localhost/wedding-production',
-    phase:phase
+    phase:phase,
+    admin: {
+      email:'admin@localhost.com',
+      password:'admin'
+    }
   }
 };
 

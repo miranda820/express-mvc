@@ -21,16 +21,16 @@ function checkAdmin (req, res, adminCB, notAdminCB) {
 
 exports.index = function(req, res){
 
-	async.parallel([
+	async.parallel({
 		//all the guests
-		function(cb) {
+		guests: function(cb) {
 			Guest.find({ isAdmin: false},function(err, guests) {
 				if (err) return next(err);
 				cb(null, guests);
 			})
 		},
 		//total of plus one 
-		function(cb) {
+		pluseoneTotal: function(cb) {
 			Guest.getPlusx(function(err, guests) {
 				if (err) return next(err);
 				cb(null, guests.length);
@@ -38,24 +38,24 @@ exports.index = function(req, res){
 		},
 
 
-		function(cb) {
+		invites: function(cb) {
 			Invite.populateAll(function(err, invites) {
 				if (err) return next(err);
 				cb(null, invites);	
 			})
 		}
 
-		], function(err, results){
+		}, function(err, results){
 
 			checkAdmin (req, res, function(){
 				res.render('admin/index', {
 						title: 'Admin',
 						permission:true,
-						guests: results[0],
-						total: results[0].length,
-						pluseoneTotal: results[1],
-						invites: results[2],
-						totalInvite :results[2].length
+						guests: results.guests,
+						total: results.guests.length,
+						pluseoneTotal: results.pluseoneTotal,
+						invites: results.invites,
+						totalInvite :results.invites.length
 					});
 				},
 
@@ -79,65 +79,49 @@ exports.signin = function (req,res){
 }
 
 exports.createGuest = function (req, res) {  
-	checkAdmin (req, res, function() {
-			var newUser = _.extend(req.body, {isPrimary : true}),
-				guestList = new GuestList (newUser);
 
-			guestList.save(function (err, guest) {
+		var newUser = _.extend(req.body, {isPrimary : true}),
+			guestList = new GuestList (newUser);
 
-				if(err) {
-					return res.send( {
-						status: 'error',
-						errors: utils.errors(err.errors),
-						guest: guest
-					})
-				}
+		guestList.save(function (err, guest) {
 
-				return res.send({
-					status: 'success',
-					guest: guest,
+			if(err) {
+				return res.send( {
+					status: 'error',
+					errors: utils.errors(err.errors),
+					guest: guest
 				})
+			}
 
+			return res.send({
+				status: 'success',
+				guest: guest,
 			})
-		},
-		function() {
-			 res.send({
-					status:"error",
-					errors: "permission denied"
-			})
-		}
-	)
+
+		})
+	
 };
 
 exports.createAdmin = function(req,res) {
 
-	checkAdmin (req, res, function(err, admin) {
 
-			var data = _.extend(req.body, {isAdmin: true}),
-				admin = new Guest(data);
-			admin.save(function(err) {
-				if(err) {
-					return res.send({
-						status:"error",
-						errors: utils.errors(err.errors)
-					})
-				}
-
-				return res.send({
-					status:"success",
-					admin:admin
-				})
-
-			});
-
-		},
-		function() {
-			res.send({
-					status:"error",
-					errors: "permission denied"
+	var data = _.extend(req.body, {isAdmin: true}),
+		admin = new Guest(data);
+	admin.save(function(err) {
+		if(err) {
+			return res.send({
+				status:"error",
+				errors: utils.errors(err.errors)
 			})
 		}
-	)
+
+		return res.send({
+			status:"success",
+			admin:admin
+		})
+
+	});
+
 	
 }
 

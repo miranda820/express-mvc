@@ -20,9 +20,13 @@ exports.session = login;
 /**
  * Login
  */
-exports.login = function(req, res){
+exports.login = function(req, res, phase){
 	if(req.user) {
-		res.redirect('/details')
+		if(phase === 1) {
+			res.redirect('/guest/register');
+		} else {
+			res.redirect('/details');
+		}
 	}
 	res.render('home/index', {
 			title: 'M&M are getting married!'

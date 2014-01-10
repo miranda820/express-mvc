@@ -11,11 +11,17 @@ var util = require('util'),
 module.exports = function(app, passport, config){
 
 
+		
+	app.get('/admin/login', admin.signin);
+	app.post('/admin/session',passport.authenticate('local', {
+      failureRedirect: '/guest/fail'
+    }), function(req, res) {
+			res.redirect('/admin');
+    });
+    app.get('/admin',auth.requiresAdmin, admin.index);
+	app.post('/admin/create', auth.requiresAdmin, admin.createAdmin);
+	app.post('/api/guestlist/create',auth.requiresAdmin, admin.createGuest);//auth needed before create
 
-	//app.get('/admin/login', admin.signin);
-	app.get('/admin', admin.index);	
-	app.post('/admin/create', admin.createAdmin);
-	app.post('/api/guestlist/create',  admin.createGuest);//auth needed before create
 
 	//api
 	//api/guest/check  comes back with json with html or error 
@@ -28,7 +34,9 @@ module.exports = function(app, passport, config){
 	//app.post('/guest/addplusx',auth.requiresLogin, guest.addplusx);
 	// route
 	
-	app.get('/', guest.login);
+	app.get('/', function(req, res) {
+		guest.login(req, res, config.phase)
+	} );
 	app.get('/login', guest.loginFrom);
 	app.get('/logout', guest.logout);
 
@@ -40,6 +48,8 @@ module.exports = function(app, passport, config){
 
 			guest.destination(req, res, config.phase);
     });
+
+
 
 	app.get('/guest/register', auth.requiresLogin, guest.register);
 

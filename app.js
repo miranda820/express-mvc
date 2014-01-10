@@ -17,6 +17,32 @@ fs.readdirSync(modelsPath).forEach(function (file) {
   }
 });
 
+
+// create admmin
+
+Guest = mongoose.model('Guest');
+
+Guest.findOne({
+	email: config.admin.email
+}, function (err, user) {
+	if(err) { console.log(err)} 
+	if(user) {
+		console.log("admin exists",user)
+	} else {
+		var admin = new Guest({
+			email: config.admin.email, 
+			password:config.admin.password,
+			isAdmin: true,
+			isPrimary: true
+		});
+		admin.save(function(err, admin) {
+			if(err) { return next(err)} 
+			console.log('admin is create',admin);
+		});
+	}
+})
+
+
 var app = express();
 require('./config/passport')(passport, config);
 require('./config/express')(app, config, passport);
