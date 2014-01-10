@@ -121,9 +121,11 @@ exports.addplusx = function (req, res) {
 exports.create = function (req, res) {
 	//check against guestlist
 	var guestList = req.profile
-
-	console.log('guestList',guestList);
-	var data = _.extend(req.body, {guestId: guestList._id} ),
+	var data = _.extend(req.body, 
+			{ 	guestId: guestList._id, 
+				email:guestList.email, 
+				isPrimary:guestList.isPrimary
+			}),
 		guest = new Guest(data);
 
 	guest.save(function(err, guest){
@@ -150,4 +152,41 @@ exports.create = function (req, res) {
 	});
 
 
+}
+
+exports.destination = function (req,res,phase){
+
+	if (req.user.isPrimary) {
+		if(phase === 1) {
+			res.redirect('/guest/register');
+		} else {
+			res.redirect('/details');
+		}
+	} else {
+		res.redirect('/details');
+	}
+}
+
+exports.index = function(req, res) {
+	return res.render('details/index', {
+		title:'M and M are getting married!',
+		guest: req.user
+	})
+}
+
+
+exports.register = function(req, res) {
+	Invite.findOne({primary: req.user.guestId}, function(err, invite) {
+		if(err) {return next(err)}
+
+		return res.render('guest/register', {
+			title:'M and M are getting married!',
+			isPrimary: req.user.isPrimary,
+			guestId: req.user.guestId,
+			invite: invite,
+			renderLayout: true
+		})
+
+	})
+	
 }

@@ -3,7 +3,7 @@
 	<form action="/guest/session" method="POST">
 		login:
 		<label>User name</label>
-		<input type="text" name="username" value="{email}">
+		<input type="text" name="email" value="{email}">
 		<label>Password:</label>
 		<input type="password" name="password" value="">
 		<input type="submit" value="submit">

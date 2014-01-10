@@ -72,89 +72,61 @@ exports.index = function(req, res) {
 	})
 }
 function response (req, res, err, invite) {
-		if(err) {
-			return res.send( {
-				status: 'error',
-				errors: utils.errors(err.errors),
-				invite: invite
-			})
-		}
-
-		return res.send({
-			status: 'success',
-			invite: invite
+	if(err) {
+		return res.send( {
+			status: 'error',
+			errors: utils.errors(err.errors),
 		})
 	}
 
-exports.update = function (req, res) {
+	return res.send({
+		status: 'success',
+		invite: invite
+	})
+}
 
-	
-	/*function sanitizeData (data) {
-		for (prop in data) {
-			if(data.hasOwnProperty(prop)) {
-				data[prop] = sanitize(data[prop]).escape();
-			}
-		}
 
-		return data;
-	}*/
+exports.createAndUpdate = function (req, res,next) {
+	var thisGuest = req.profile;
 
-	if(req.user.isPrimary) {
 
-		Invite.findOne({primary: req.user._id}, function(err, invite){
-			//if user hasn't fill the address,
-			//create invite
+		//check invite exists
+		Invite.findOne({primary: thisGuest._id}).exec(function(err, invite) {
 
-			
 			if(!invite) {
+				//create the invite
+				var data = _.extend(req.body, {primary: thisGuest._id} ),
+					invite = new Invite(data);
 
-				var guestInfo = _.extend({ primary: req.user._id }, req.body),
-					invitation = new Invite( guestInfo);
-
-				invitation.save(function (err) {
-					response(req, res, err, invite);
+				invite.save(function(err, invite){
+					response(req,res, err, invite);
 				});
 
 			} else {
-
+				//update the invite
 				var invite = _.extend(invite, req.body);
 				invite.save(function (err) {
 					response(req, res, err, invite);
 				});
 			}
-		});
-	} else {
-		//
-
-	}
-
-}
-
-exports.create = function (req, res,next) {
-	var thisGuest = req.profile;
-
-
-	//check invite exists
-	Invite.findOne({primary: thisGuest._id}).exec(function(err, invite) {
-
-		if(!invite) {
-			var data = _.extend(req.body, {primary: thisGuest._id} ),
-				invite = new Invite(data);
-
-			invite.save(function(err, invite){
-				response(req,res, err, invite);
-			});
-
-		} else {
-			return res.send({
-				status: 'error',
-				errors: utils.errors(err.errors),
-				invite: invite
-			})
-		}
-	})
-	
-
+		})
 
 
 }
+
+
+// if(req.body.plusone) {
+// 		//save plusone first
+// 		var guest = new GuestList(req.body);
+// 		guest.save(function(err, guestList) {
+// 			if (err) {
+// 				return res.send({
+// 					status: 'error',
+// 					errors: utils.errors(err.errors),
+// 					guest: guest
+// 				})
+// 			};
+// 			createInvite ();
+// 		})
+
+// 	}

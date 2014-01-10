@@ -1,6 +1,7 @@
 var path = require('path'),
     rootPath = path.normalize(__dirname + '/..'),
-    env = process.env.NODE_ENV || 'development';
+    env = process.env.NODE_ENV || 'development',
+    phase = 1;
 
 var config = {
   development: {
@@ -9,7 +10,8 @@ var config = {
       name: 'express-mvc'
     },
     port: 8000,
-    db: 'mongodb://localhost/wedding-dev'
+    db: 'mongodb://localhost/wedding-dev',
+    phase:phase
   },
 
   test: {
@@ -18,7 +20,8 @@ var config = {
       name: 'express-mvc'
     },
     port: 8000,
-    db: 'mongodb://localhost/wedding-test'
+    db: 'mongodb://localhost/wedding-test',
+    phase:phase
   },
 
   production: {
@@ -27,7 +30,8 @@ var config = {
       name: 'express-mvc'
     },
     port: 8000,
-    db: 'mongodb://localhost/wedding-production'
+    db: 'mongodb://localhost/wedding-production',
+    phase:phase
   }
 };
 

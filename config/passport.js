@@ -19,52 +19,22 @@ module.exports = function (passport, config) {
 
   // use local strategy
   passport.use(new LocalStrategy({
-      usernameField: 'firstName',
-      passwordField: 'lastName'
+      usernameField: 'email',
+      passwordField: 'password'
     },
-    function(firstName, lastName, done) {
-      Guest.findOne({ 
-      		firstName: firstName,
-      		lastName: lastName
-      	}, function (err, guest) {
-  			if (err) { return done(err) }
-  			if (!guest) {
-  				return done(null, false, { message: 'Unknown guest' });
-  			}
-  			return done(null, guest);
-      })
-    }
-  ));
-
-  // use two LocalStrategies, registered admin
-  passport.use('admin', new LocalStrategy(
-    {  usernameField: 'username',
-      passwordField: 'password' },
-
-    function(username, password, done) {
-
-      console.log('username',username, 'password',password)
-      Admin.findOne({
-        username: username
-      }, function (err, admin) {
+    function(email, password, done) {
+      Guest.findOne({ email: email }, function (err, user) {
         if (err) { return done(err) }
-        if (!admin) {
-          console.log('permission denied')
-          return done(null, false, { message: 'permission denied' });
+        if (!user) {
+          return done(null, false, { message: 'Unknown user' })
         }
-
-        if (!admin.authenticate(password)) {
-          console.log('Invalid password')
+        if (!user.authenticate(password)) {
           return done(null, false, { message: 'Invalid password' })
         }
-
-        console.log('find the admin')
-        return done(null, admin);
-
+        return done(null, user)
       })
     }
-  ));
-
+  ))
 }
 
 

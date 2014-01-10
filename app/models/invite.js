@@ -12,8 +12,7 @@ var InviteSchema = new Schema({
 	address2:String,
 	city: { type: String, trim:true, required: true},
 	state: String,// will be sub document
-	zipcode: { type: String, trim:true, required: true,validate: validate({message: 'invalid zipcode'}, 'regex', /^\d{5}(?:[-\s]\d{4})?$/i )},
-	rsvp: {type:Boolean, default: false}
+	zipcode: { type: String, trim:true, required: true,validate: validate({message: 'invalid zipcode'}, 'regex', /^\d{5}(?:[-\s]\d{4})?$/i )}
 })
 
 
