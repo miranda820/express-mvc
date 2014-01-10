@@ -21,7 +21,6 @@ exports.session = login;
  * Login
  */
 exports.login = function(req, res){
-	console.log('check signin', req.currentUser);
 	if(req.user) {
 		res.redirect('/details')
 	}
@@ -46,23 +45,30 @@ exports.logout = function (req, res) {
 	res.redirect('/');
 };
 
-exports.checkUser = function(req, res,next){
-	Guest.findOne(req.body, function(err, guests){
+exports.checkUser = function(req, res,next, guestId){
+	//check is guest is registered
+	Guest.findOne({guestId: guestId}, function(err, user) {
 
-		if(err) throw new Error(err);
-		// if use doesn't exit send user message
-		if(!guests) {
-			return res.send({
-				status:'error',
-				errors: {
-					message: 'Hummm, can\'t find you on the guest list, please contact M and M'
-				}
-			})
-		} 
-		req.currentUser = guests;
-		return next();
+		 if(user) {
+				//guest is registered ask to login
+				return res.render('login',{
+						email: req.body.email,
+						renderLayout: false
 
-	});
+					} //TODO send json html back
+				);
+		 } else {
+				//guest is not registered
+				//
+				return res.render('guest/register',{
+						renderLayout: false,
+						createPW: true,
+						guestId: guestId
+					} //TODO send json html back
+				);
+
+		 }
+	})
 };
 exports.addplusx = function (req, res) {
 		//find current logged in guest should be primary guest
