@@ -106,8 +106,8 @@ GuestSchema.statics = {
 
 	},
 
-	getUser: function(id,cb) {
-	 	this.find({guestId: id})
+	getUser: function(cb) {
+	 	this.find()
 	 	.populate('guestId')
 		.exec(cb);
 

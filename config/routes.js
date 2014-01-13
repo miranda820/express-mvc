@@ -2,6 +2,7 @@ var async = require('async');
 
 var util = require('util'),
 	auth = require('./middlewares/authorization'),
+	userCheck = require('./middlewares/usercheck'),
 	guestlist = require('../app/controllers/guestlist'),
 	guest = require('../app/controllers/guest'),
 	invite = require('../app/controllers/invite'),
@@ -25,9 +26,9 @@ module.exports = function(app, passport, config){
 
 	//api
 	//api/guest/check  comes back with json with html or error 
-	app.post('/api/guestlist/check', guestlist.checkGuest);
+	//app.post('/api/guestlist/check', guestlist.checkGuest);
 	app.post('/api/invite/create/:guestId', invite.createAndUpdate);
-	app.post('/api/guest/create/:guestId', guest.create);
+	app.post('/api/guest/create', userCheck.checkGuestList, guest.create);
 
 	app.post('/api/invite/:guestId/create/plusone', invite.createPlusOne);
 

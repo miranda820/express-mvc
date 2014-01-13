@@ -1,5 +1,6 @@
 {?createPW}
-	<form action="/api/guest/create/{guestId}" method="POST">
+	<form action="/api/guest/create" method="POST">
+		<input  type="text" name="email" value="{email}">
 		<label>password</label>
 		<input  type="password" name="password" value="">
 		<input type="submit" value="submit">
@@ -16,7 +17,7 @@
 	{/invite}
 
 
-	<form action="/api/invite/create/{guestId}" method="POST">
+	<form action="/api/invite/create" method="POST">
 		<label>address</label>
 		<input type="text" name="address" value="">
 		<input type="text" name="address1" value="">

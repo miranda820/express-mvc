@@ -19,11 +19,16 @@
 			<input type="text" name="lastName" value="">
 			<label>email</label>
 			<input type="text" name="email" value="">
+			<label>isPrimary</label>
+			<input type="checkbox" name="isPrimary" checked="checked">
+			<label>is wedding party</label>
+			<input type="checkbox" name="isParty">
+
 			<input type="submit" value="submit">
 		</form>
 		<div>
 			
-			total invites:{totalInvite}<br/>
+			total registered:{totalInvite}<br/>
 			total plus one:{pluseoneTotal}<br/>
 			total guests:{total}, <br/>
 			{#pluseoneTotal}
@@ -31,6 +36,10 @@
 			{/pluseoneTotal}
 		</div>
 		<h2>current guests list</h2>
+		{#guestList}
+			{firstName} {lastName} {email}<br/>
+		{/guestList}
+		<h2>Has address</h2>
 		{invites}
 		<ul>
 			{#invites}

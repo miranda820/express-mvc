@@ -59,8 +59,7 @@ exports.checkUser = function(req, res,next, guestId){
 						email: req.body.email,
 						renderLayout: false
 
-					} //TODO send json html back
-				);
+					});
 		 } else {
 				//guest is not registered
 				//
@@ -82,7 +81,8 @@ exports.create = function (req, res) {
 	var data = _.extend(req.body, 
 			{ 	guestId: guestList._id, 
 				email:guestList.email, 
-				isPrimary:guestList.isPrimary
+				isPrimary:guestList.isPrimary,
+				isParty:guestList.isParty
 			}),
 		guest = new Guest(data);
 
@@ -94,8 +94,19 @@ exports.create = function (req, res) {
 				guest: guest
 			})
 		}
+
+		req.logIn(guest, function(err) {
+
+    		if (err) { return next(err); }
+    		//return res.redirect('/guest/register');
+    		return res.render('guest/register',{
+				isPrimary:true,
+				guestId: guestList._id
+			})
+		
+		});
 		//create password successfully
-		if(guestList.isPrimary) {
+		/*if(guestList.isPrimary) {
 			return res.render('guest/register',{
 				isPrimary:true,
 				guestId: guestList._id
@@ -106,7 +117,7 @@ exports.create = function (req, res) {
 				title:'login'
 			})//TODO add json html
 
-		}
+		}*/
 	});
 
 

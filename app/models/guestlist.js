@@ -15,7 +15,8 @@ var GuestListSchema = new Schema({
 	firstName: { type: String, trim: true, required:true, validate:nameValidate },
 	lastName: { type: String, trim: true, required:true, validate:nameValidate },
 	email: { type: String, required:true, validate: emailValidate },
-	isPrimary: {type:Boolean, default: false} // if guest is create by admin isPrimary is true
+	isPrimary: {type:Boolean, default: false}, // if guest is create by admin isPrimary is true
+	isParty: {type:Boolean, default: false} // if guest is create by admin isParty is true
 })
 
 

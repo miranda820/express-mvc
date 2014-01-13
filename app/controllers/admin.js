@@ -2,29 +2,17 @@ var mongoose = require('mongoose'),
 	_ = require('underscore'),
 	Invite = mongoose.model('Invite'),
 	GuestList = mongoose.model('GuestList'),
+	Guest = mongoose.model('Guest'),
 	async = require('async'),
 	utils = require('../../lib/utils');
 
-function checkAdmin (req, res, adminCB, notAdminCB) {
-	return adminCB();
-	/*Guest.isAdmin(req.user.firstName, req.user.lastName, function(err, admin) {
-		if(err) next (err);
-		if(admin) {
-			return adminCB();
-		} else {
-			return notAdminCB();
-		}
-	});*/
-
-
-}
 
 exports.index = function(req, res){
 
 	async.parallel({
 		//all the guests
-		guests: function(cb) {
-			Guest.find({ isAdmin: false},function(err, guests) {
+		guestList: function(cb) {
+			GuestList.find(function(err, guests) {
 				if (err) return next(err);
 				cb(null, guests);
 			})
@@ -45,31 +33,23 @@ exports.index = function(req, res){
 			})
 		}
 
-		}, function(err, results){
+	}, function(err, results){
 
-			checkAdmin (req, res, function(){
-				res.render('admin/index', {
-						title: 'Admin',
-						permission:true,
-						guests: results.guests,
-						total: results.guests.length,
-						pluseoneTotal: results.pluseoneTotal,
-						invites: results.invites,
-						totalInvite :results.invites.length
-					});
-				},
+		res.render('admin/index', {
+				title: 'Admin',
+				permission:true,
+				guestList: results.guestList,
+				total: results.guestList.length,
+				pluseoneTotal: results.pluseoneTotal,
+				invites: results.invites,
+				totalInvite :results.invites.length
+			});
 
-				function (){
-					res.render('admin/index', {
-							title: 'Admin',
-							permission:false,
-							error:'You have no permission to view this page'
-					})
-				}
+		}
+	)
 
-			)			
-	})
 
+	
 };
 
 exports.signin = function (req,res){
@@ -80,7 +60,7 @@ exports.signin = function (req,res){
 
 exports.createGuest = function (req, res) {  
 
-		var newUser = _.extend(req.body, {isPrimary : true}),
+		var newUser = _.extend(req.body),
 			guestList = new GuestList (newUser);
 
 		guestList.save(function (err, guest) {
