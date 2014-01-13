@@ -2,64 +2,10 @@ var mongoose = require('mongoose'),
 	_ = require('underscore'),
 	//sanitize = require('mongoose-validator').sanitize,
 	utils = require('../../lib/utils'),
-	GuestList = mongoose.model('GuestList'),
-	Guest = mongoose.model('Guest'),
+	guestlist = require('../../app/controllers/guestlist'),
 	Invite = mongoose.model('Invite');
 
 
-
-//see if guest has entered address
-exports.checkRegistration = function(req, res){
-	var thisGuest = req.currentUser
-	console.log(req.currentUser);
-	// is the guest is primary
-	if(thisGuest.isPrimary)	{
-		Invite.findOne({primary: thisGuest._id}, function(err, invite){
-			if(err) throw new Error(err);
-			if(!invite) {
-				return res.render('guest/register',{
-					renderPrimaryForm: true,
-					renderLayout: false,
-					firstName: thisGuest.firstName,
-					lastName: thisGuest.lastName
-
-				}/*, function(err, html) {
-
-					var response = {
-						status:'not registered',
-						html:html
-					}
-					res.send(response);
-				}*/);
-				
-			} else {
-				return res.send({
-						status:'registered',
-						redirect:'/login'
-				});
-			}
-		});
-	} else {
-		if(thisGuest.hash_password) {
-			//is the guest is a plus one
-			return res.redirect('/login');
-		} 
-
-		return res.render('guest/register',{
-			renderPlusOneForm: true,
-			renderLayout: false,
-			firstName: thisGuest.firstName,
-			lastName: thisGuest.lastName
-		}/*, function (err, html ) {
-			var response = {
-				status:'not registered',
-				html:html
-			}
-			res.send(response);
-		}*/)
-		
-	}
-};
 
 
 
@@ -87,46 +33,75 @@ function response (req, res, err, invite) {
 
 
 exports.createAndUpdate = function (req, res,next) {
-	var thisGuest = req.profile;
+	var thisGuest = req.profile; // the data is from guestlist model
 
+	//check invite exists
+	Invite.findOne({primary: thisGuest._id}).exec(function(err, invite) {
 
-		//check invite exists
-		Invite.findOne({primary: thisGuest._id}).exec(function(err, invite) {
+		if(!invite) {
+			//create the invite
+			var data = _.extend(req.body, {primary: thisGuest._id} ),
+				invite = new Invite(data);
 
-			if(!invite) {
-				//create the invite
-				var data = _.extend(req.body, {primary: thisGuest._id} ),
-					invite = new Invite(data);
+			invite.save(function(err, invite){
+				response(req,res, err, invite);
+			});
 
-				invite.save(function(err, invite){
-					response(req,res, err, invite);
-				});
-
-			} else {
-				//update the invite
-				var invite = _.extend(invite, req.body);
-				invite.save(function (err) {
-					response(req, res, err, invite);
-				});
-			}
-		})
+		} else {
+			//update the invite
+			var invite = _.extend(invite, req.body);
+			invite.save(function (err) {
+				response(req, res, err, invite);
+			});
+		}
+	})
 
 
 }
 
+exports.createPlusOne = function (req, res) {
+		//check if current logged in guest should is primary guest
+		Invite.findOne({primary: req.user.guestId}, function(err, invite) {
+			if(invite) {
+				//only allow on X amount of guest
+				//TODO change "1" to a configurable number 
+				if(invite.plusx.length < 1) {
+					guestlist.addToGuestList(req.body, function(newGuest) {
+						//after guest is added to gueslist, add it to primary guest's invite
+						invite.plusx.push(newGuest._id);
+						invite.save(function (err, invite) {
+							if(err) {
+								return res.send( {
+									status: 'error',
+									errors: utils.errors(err.errors)
+								})
+							}
 
-// if(req.body.plusone) {
-// 		//save plusone first
-// 		var guest = new GuestList(req.body);
-// 		guest.save(function(err, guestList) {
-// 			if (err) {
-// 				return res.send({
-// 					status: 'error',
-// 					errors: utils.errors(err.errors),
-// 					guest: guest
-// 				})
-// 			};
-// 			createInvite ();
-// 		})
+							return res.send({
+								status: 'success',
+								message: 'Pluse one is created'
+							});
 
-// 	}
+						});
+						
+					})
+					
+					
+				} else {
+					//if primary guest already has a plus one
+					return res.send({
+						status: 'error',
+						errors: 'You already have a plus one'
+					});
+				}
+
+			} else {
+				return res.send({
+					status: 'not registered, please registered first before add plus one'
+				});
+			}
+
+		})
+		
+
+}

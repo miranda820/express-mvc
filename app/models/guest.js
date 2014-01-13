@@ -12,7 +12,7 @@ var ValidatorError =  require('mongoose/lib/errors/validator');
 var nameValidate = [ validate("regex",/^[a-z ,.-]+$/i), validate({message: 'name cannot be blank'}, 'notEmpty')],
 	isEmail = validate({message: 'Invalid Email'}, 'isEmail');
 var GuestSchema = new Schema({
-	guestId:{type:Schema.ObjectId, ref:'GuestList', validate:validate({message: 'name cannot be blank'}, 'notEmpty')},
+	guestId:{type:Schema.ObjectId, ref:'GuestList', validate:validate({message: 'ID cannot be blank'}, 'notEmpty')},
 	email:{ type: String, default: '', required: true, validate:isEmail},
 	hashed_password: { type: String, default: '', required: true, validate:validate({message: 'password cannot be blank'}, 'notEmpty')},
   	salt: { type: String, default: '' },
@@ -33,7 +33,7 @@ var GuestSchema = new Schema({
 
 GuestSchema.pre('save', function(next) {
 	 var Guest = mongoose.model('Guest');
-	 Guest.findOne({ guestId: this.guestId }, function(err, guest) {
+	 Guest.findOne({ email: this.email }, function(err, guest) {
 	 	console.log(guest);
 	 	if(guest) {
 	 		error = new ValidationError(this);
@@ -106,8 +106,8 @@ GuestSchema.statics = {
 
 	},
 
-	getUser: function(cb) {
-	 	this.find()
+	getUser: function(id,cb) {
+	 	this.find({guestId: id})
 	 	.populate('guestId')
 		.exec(cb);
 

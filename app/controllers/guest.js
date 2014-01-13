@@ -74,59 +74,7 @@ exports.checkUser = function(req, res,next, guestId){
 		 }
 	})
 };
-exports.addplusx = function (req, res) {
-		//find current logged in guest should be primary guest
-		Invite.findOne({primary: req.user._id}, function(err, invite) {
-			if(invite) {
-				//only allow on X amount of guest
-				//TODO change "1" to a configurable number 
-				if(invite.plusx.length < 1) {
 
-					//create plus one in guest model
-					var plusGuest = new Guest(req.body);
-					plusGuest.save(function(err,plus) {
-
-						if(err) {
-							return res.send( {
-								status: 'error',
-								errors: utils.errors(err.errors)
-							})
-						}
-					});
-					//add plus one's id to invite
-					invite.plusx.push(plusGuest);
-					invite.save(function (err, invite) {
-						if(err) {
-							return res.send( {
-								status: 'error',
-								errors: utils.errors(err.errors)
-							})
-						}
-
-						return res.send({
-							status: 'success',
-							plusx: invite.plusx
-						});
-
-					});
-				} else {
-					//if primary guest already has a plus one
-					return res.send({
-						status: 'error',
-						errors: 'alreay registered your plus one'
-					});
-				}
-
-			} else {
-				return res.send({
-					status: 'not registered, please registered first before add plus one'
-				});
-			}
-
-		})
-		
-
-}
 
 exports.create = function (req, res) {
 	//check against guestlist

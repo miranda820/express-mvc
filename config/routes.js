@@ -19,7 +19,7 @@ module.exports = function(app, passport, config){
 			res.redirect('/admin');
     });
     app.get('/admin',auth.requiresAdmin, admin.index);
-	app.post('/admin/create', auth.requiresAdmin, admin.createAdmin);
+	app.post('/api/admin/create',auth.requiresAdmin, admin.createAdmin);
 	app.post('/api/guestlist/create',auth.requiresAdmin, admin.createGuest);//auth needed before create
 
 
@@ -29,9 +29,9 @@ module.exports = function(app, passport, config){
 	app.post('/api/invite/create/:guestId', invite.createAndUpdate);
 	app.post('/api/guest/create/:guestId', guest.create);
 
-	app.param('guestId', guestlist.guestID)
+	app.post('/api/invite/:guestId/create/plusone', invite.createPlusOne);
 
-	//app.post('/guest/addplusx',auth.requiresLogin, guest.addplusx);
+	app.param('guestId', guestlist.guestID);
 	// route
 	
 	app.get('/', function(req, res) {
@@ -58,7 +58,7 @@ module.exports = function(app, passport, config){
 	app.get('/guest/fail', function(req, res) {
 		return res.send({
 			status: 'error',
-			errorMessage: 'Hmmmmm, We can\'t find you'
+			errorMessage: 'Hmmmmm, Something went wrong'
 		})
 
 	});
@@ -68,7 +68,7 @@ module.exports = function(app, passport, config){
 	app.get('/details',auth.requiresLogin, guest.index);	
 
 	app.get('/profile',auth.requiresLogin, profile.index);	
-
+	
 
 
 

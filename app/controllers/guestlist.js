@@ -28,18 +28,40 @@ exports.checkGuest = function  (req, res, next) {
 
 exports.guestID = function (req, res, next, id) {
 	GuestList.findOne({ _id : id })
-		.exec(function (err, user) {
-			if (err) return next(err)
-			if (!user) {
-				return res.send({
-					status:'error',
-					errors: {
-						message:'guest doesn\'t exist'
-					}
-				})
-			}
+	.exec(function (err, user) {
+		if (err) return next(err)
+		if (!user) {
+			return res.send({
+				status:'error',
+				errors: {
+					message:'guest doesn\'t exist'
+				}
+			})
+		}
 
-			req.profile = user
-			next()
-		})
+		req.profile = user
+		next()
+	})
+}
+
+exports.addToGuestList = function (guestData,cb){
+	//create guest in guestlist model
+	var newGuest = new GuestList(guestData);
+	newGuest.save(function(err,guest) {
+
+		if(err) {
+			return res.send( {
+				status: 'error',
+				errors: utils.errors(err.errors)
+			})
+		} else {
+			//guest created successfully
+
+			//callback
+ 			if(typeof cb != 'function'){
+ 				return
+ 			}
+			cb(guest);
+		}
+	});
 }

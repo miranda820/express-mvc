@@ -17,6 +17,13 @@ fs.readdirSync(modelsPath).forEach(function (file) {
   }
 });
 
+var app = express();
+require('./config/passport')(passport, config);
+require('./config/express')(app, config, passport);
+require('./config/routes')(app, passport, config);
+
+app.listen(config.port);
+
 
 // create admmin
 
@@ -41,13 +48,5 @@ Guest.findOne({
 		});
 	}
 })
-
-
-var app = express();
-require('./config/passport')(passport, config);
-require('./config/express')(app, config, passport);
-require('./config/routes')(app, passport, config);
-
-app.listen(config.port);
 
 exports = module.exports = app

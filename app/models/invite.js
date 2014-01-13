@@ -22,7 +22,7 @@ InviteSchema.virtual('date')
   });
 
 InviteSchema.methods = {
-
+	
 }
 /**
  * validation
@@ -50,18 +50,23 @@ InviteSchema.statics = {
 		    })
 
 	},
-
-	getPlusx: function(_id, cb) {
-		this.findOne({primary: _id})
-		.populate('plusx')
-		.exec(cb);
-	},
 	
 	populateAll: function(cb) {
 	 	this.find()
 	 	.populate('primary plusx')
 		.exec(cb);
 
+	},
+	getPrimary: function(id,cb) {
+	 	this.findOne({primary: id})
+	 	.populate('primary plusx')
+		.exec(cb);
+	},
+
+	getPlusOne: function(id,cb) {
+	 	this.findOne({plusx: id})
+	 	.populate('primary plusx')
+		.exec(cb);
 	}
 
 }

@@ -2,7 +2,7 @@
 {<content}
 	{?permission}
 	create admin:
-		<form action="/admin/create" method="POST">
+		<form action="/api/admin/create" method="POST">
 			<label>email</label>
 			<input type="text" name="email" value="">
 			<label>password</label>

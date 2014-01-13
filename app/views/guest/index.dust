@@ -1,15 +1,32 @@
 {>layout/}
 {<content}
- this is {#guest} {firstName} {lastName} {/guest}
+  {#guest} this is {firstName} {lastName} {/guest}<br/>
  	{!for primary user only!}
 	{?showPrimary}
 
 		TODO when invite is null<br/>
 		
-		{#plusx}
-			plus one: {firstName} {lastName} <br/>
-		{/plusx}
 		{invite}
-		{>"guest/register"/}
+		{>"guest/register-partial"/}
+
+		{?plusx}
+			plus one: 
+			{#plusx}
+				{firstName} {lastName} <br/>
+			{/plusx}
+		{:else}
+			Add plusone:
+			<form action="/api/invite/{guestId}/create/plusone" method="POST">
+				<label>first name:</label>
+				<input type="text" name="firstName" value="">
+				<label>last name:</label>
+				<input type="text" name="lastName" value="">
+				<label>email</label>
+				<input type="text" name="email" value="">
+				<input type="submit" value="submit">
+			</form>
+		{/plusx}
 	{/showPrimary}
+
+	rsvp food music here
 {/content}
