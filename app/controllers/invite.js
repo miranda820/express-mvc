@@ -33,14 +33,14 @@ function response (req, res, err, invite) {
 
 
 exports.createAndUpdate = function (req, res,next) {
-	var thisGuest = req.profile; // the data is from guestlist model
+	var thisGuest = req.user; // the data is from guestlist model
 
 	//check invite exists
-	Invite.findOne({primary: thisGuest._id}).exec(function(err, invite) {
+	Invite.findOne({primary: thisGuest.guestId}).exec(function(err, invite) {
 
 		if(!invite) {
 			//create the invite
-			var data = _.extend(req.body, {primary: thisGuest._id} ),
+			var data = _.extend(req.body, {primary: thisGuest.guestId} ),
 				invite = new Invite(data);
 
 			invite.save(function(err, invite){

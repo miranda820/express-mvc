@@ -27,7 +27,11 @@
 			</form>
 		{/plusx}
 
-		<form action="/api/guest/picture"></form>
+		<form action="/guest/add/picture" method="post" enctype="multipart/form-data">
+			<input type="file" name="picture">
+    		<input type="submit">
+			
+		</form>
 	{/showPrimary}
 
 	rsvp food music here

@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
 	utils = require('../../lib/utils'),
+	fs = require('fs'),
 	_ = require('underscore'),
 	GuestList = mongoose.model('GuestList'),
 	Guest = mongoose.model('Guest'),
@@ -158,4 +159,9 @@ exports.register = function(req, res) {
 
 	})
 	
+}
+
+exports.upload = function (req, res) {
+	console.log('images', req.files.picture);
+	var tmp_path = req.files.picture.path;
 }

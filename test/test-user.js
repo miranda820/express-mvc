@@ -33,7 +33,7 @@ var mongoose = require('mongoose'),
 
 //user login 
 
-describe('Admin:', function () {
+/*describe('Admin:', function () {
 	it('Access admin page without login', function(done) {
 		request(app)
 		.get('/admin')
@@ -65,5 +65,5 @@ describe('Admin:', function () {
         .end(done)
 	})
 
-});
+});*/
 

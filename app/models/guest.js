@@ -18,10 +18,11 @@ var GuestSchema = new Schema({
   	salt: { type: String, default: '' },
 
 	entree: String, // will be a document
-	note:{ type: String, default: '' },
+	note:{ type: String,trim:true, default: '' },
 	songs:[{ name: {type:String, trim:true},
 			artist: {type:String, trim:true}
 	}],
+	picture: { type: String, trim:true, default: '' },
 	table: Number,
 	isAdmin: {type:Boolean, default: false},
 	isPrimary: {type:Boolean, default: false},
