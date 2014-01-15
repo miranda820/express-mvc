@@ -6,6 +6,7 @@ var mongoose = require('mongoose'),
 
 var isEmail = validate({message: 'Invalid Email'}, 'isEmail');
 var InviteSchema = new Schema({
+	user:{type:Schema.ObjectId, ref:'Guest', required: true},
 	primary:{type:Schema.ObjectId, ref:'GuestList', required: true},
 	plusx:[{type:Schema.ObjectId, ref:'GuestList'}],
 	address: { type: String, trim:true, required: true},
@@ -53,19 +54,19 @@ InviteSchema.statics = {
 	
 	populateAll: function(cb) {
 	 	this.find()
-	 	.populate('primary plusx')
+	 	.populate('primary plusx user')
 		.exec(cb);
 
 	},
 	getPrimary: function(id,cb) {
 	 	this.findOne({primary: id})
-	 	.populate('primary plusx')
+	 	.populate('primary plusx user')
 		.exec(cb);
 	},
 
 	getPlusOne: function(id,cb) {
 	 	this.findOne({plusx: id})
-	 	.populate('primary plusx')
+	 	.populate('primary plusx user')
 		.exec(cb);
 	}
 

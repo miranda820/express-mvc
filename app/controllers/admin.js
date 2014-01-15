@@ -11,8 +11,8 @@ exports.index = function(req, res){
 
 	async.parallel({
 		//all the guests
-		guestList: function(cb) {
-			GuestList.find(function(err, guests) {
+		guest: function(cb) {
+			Guest.getUser(function(err, guests) {
 				if (err) return next(err);
 				cb(null, guests);
 			})
@@ -38,8 +38,8 @@ exports.index = function(req, res){
 		res.render('admin/index', {
 				title: 'Admin',
 				permission:true,
-				guestList: results.guestList,
-				total: results.guestList.length,
+				guest: results.guest,
+				total: results.guest.length,
 				pluseoneTotal: results.pluseoneTotal,
 				invites: results.invites,
 				totalInvite :results.invites.length

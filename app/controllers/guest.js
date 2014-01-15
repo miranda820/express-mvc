@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
 	utils = require('../../lib/utils'),
+	path = require('path'),
 	fs = require('fs'),
 	_ = require('underscore'),
 	GuestList = mongoose.model('GuestList'),
@@ -162,6 +163,53 @@ exports.register = function(req, res) {
 }
 
 exports.upload = function (req, res) {
-	console.log('images', req.files.picture);
+
 	var tmp_path = req.files.picture.path;
+
+	fs.readFile(tmp_path, function(err, data) {
+		var pictureName = req.files.picture.name,
+			pictureSize = req.files.picture.size;
+		if(!pictureName) {
+
+			return res.send({
+				status:"error",
+				message:"something went wrong, please upload image again"
+			})
+		} else {
+			if (pictureName.match(/\.(jpg|png|jpeg)/) && pictureSize < 3 * 1024 * 1024) {
+				var format = req.files.picture.type.replace('image/','.'),
+					fileName = req.user.guestId + format,
+					newPath = "./public/uploads/fullsize/" + fileName,
+					targetPath = path.resolve(newPath);
+
+				fs.writeFile(targetPath, data, function (err) {
+					if(err) {return (next)}
+
+					Guest.findOne({_id:req.user._id}, function (err, guest) {
+
+						var user = _.extend(guest, {picture: fileName});
+
+						console.log('-----user',user, fileName)
+						user.save(function (err) {
+							return res.send({
+								status:"success",
+								imageURL: "/public/uploads/fullsize/" + fileName
+							})
+						});
+					})
+				});
+
+			} else {
+
+				return res.send({
+					status:"error",
+					message:"Please make sure the image is .jpg or .png and it's is less than 3MB"
+				})
+			}
+
+		}
+
+
+	})
+
 }

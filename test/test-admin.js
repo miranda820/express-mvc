@@ -139,9 +139,9 @@ describe('Admin', function () {
 				});
 			})
 
-			it('create new guest', function() {
+			/*it('create new guest', function() {
 				
-			})
+			})*/
 		})
 
 

@@ -36,9 +36,9 @@
 			{/pluseoneTotal}
 		</div>
 		<h2>current guests list</h2>
-		{#guestList}
+		{#guest}
 			{firstName} {lastName} {email}<br/>
-		{/guestList}
+		{/guest}
 		<h2>Has address</h2>
 		{invites}
 		<ul>

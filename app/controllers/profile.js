@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
 	utils = require('../../lib/utils'),
+	Guest = mongoose.model('Guest'),
 	Invite = mongoose.model('Invite');
 
 

@@ -40,7 +40,7 @@ exports.createAndUpdate = function (req, res,next) {
 
 		if(!invite) {
 			//create the invite
-			var data = _.extend(req.body, {primary: thisGuest.guestId} ),
+			var data = _.extend(req.body, {primary: thisGuest.guestId, user: thisGuest._id} ),
 				invite = new Invite(data);
 
 			invite.save(function(err, invite){

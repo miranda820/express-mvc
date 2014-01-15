@@ -43,7 +43,7 @@ module.exports = function(app, passport, config){
 	app.post('/api/invite/create', auth.requiresLogin, invite.createAndUpdate);
 	app.post('/api/guest/create', userCheck.checkGuestList, guest.create);
 
-	app.post('/api/invite/:guestId/create/plusone', invite.createPlusOne);
+	//app.post('/api/invite/:guestId/create/plusone', invite.createPlusOne);
 
 	app.param('guestId', guestlist.guestID);
 	// route

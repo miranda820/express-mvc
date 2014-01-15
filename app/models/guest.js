@@ -32,10 +32,10 @@ var GuestSchema = new Schema({
 
 
 
-GuestSchema.pre('save', function(next) {
+/*GuestSchema.pre('save', function(next) {
 	 var Guest = mongoose.model('Guest');
 	 Guest.findOne({ email: this.email }, function(err, guest) {
-	 	console.log(guest);
+	 	console.log('pre save',guest);
 	 	if(guest) {
 	 		error = new ValidationError(this);
 		    error.errors.email = new ValidatorError('email', 'already exist', this.email);
@@ -44,7 +44,7 @@ GuestSchema.pre('save', function(next) {
 	 	return next();
 	 })
     
-})
+})*/
 
 // GuestSchema.virtual('date')
 //   .get(function(){
@@ -108,7 +108,7 @@ GuestSchema.statics = {
 	},
 
 	getUser: function(cb) {
-	 	this.find()
+	 	this.find({isAdmin:false})
 	 	.populate('guestId')
 		.exec(cb);
 
@@ -120,7 +120,8 @@ GuestSchema.statics = {
 
 	isAdmin:function(firstName, lastName, cb) {
 		this.findOne({firstName:firstName, lastName: lastName, isAdmin: true}, cb);	
-	}
+	},
+
 }
 
 
