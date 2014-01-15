@@ -162,7 +162,7 @@ exports.register = function(req, res) {
 	
 }
 
-exports.upload = function (req, res) {
+exports.upload = function (req, res, next) {
 
 	var tmp_path = req.files.picture.path;
 
@@ -176,28 +176,47 @@ exports.upload = function (req, res) {
 				message:"something went wrong, please upload image again"
 			})
 		} else {
+			//picture should be jpg or png format and less than 3MB
 			if (pictureName.match(/\.(jpg|png|jpeg)/) && pictureSize < 3 * 1024 * 1024) {
+
 				var format = req.files.picture.type.replace('image/','.'),
-					fileName = req.user.guestId + format,
-					newPath = "./public/uploads/fullsize/" + fileName,
-					targetPath = path.resolve(newPath);
+					fileName = "full_"+req.user.guestId + format,
+					newPath = path.resolve("./public/uploads/"),
+					targetPath = newPath + '/' + fileName;
 
-				fs.writeFile(targetPath, data, function (err) {
-					if(err) {return (next)}
+				console.log('targetPath', targetPath);
+				fs.stat(newPath, function(err, stat) {
+					if(!stat) {
+						fs.mkdir(newPath, 0775, function (err) {
+							 writeImage()
+						})
+						return
+					}
+					 writeImage()
+				})		
 
-					Guest.findOne({_id:req.user._id}, function (err, guest) {
 
-						var user = _.extend(guest, {picture: fileName});
+				function writeImage() {
+					fs.writeFile(targetPath, data, function (err) {
+						if(err) {
+							console.log(err)
+							return next();
+						}
 
-						console.log('-----user',user, fileName)
-						user.save(function (err) {
-							return res.send({
-								status:"success",
-								imageURL: "/public/uploads/fullsize/" + fileName
-							})
-						});
-					})
-				});
+						Guest.findOne({_id:req.user._id}, function (err, guest) {
+
+							var user = _.extend(guest, {picture: fileName});
+
+							console.log('-----user',user, fileName)
+							user.save(function (err) {
+								return res.send({
+									status:"success",
+									imageURL: "/public/uploads/fullsize/" + fileName
+								})
+							});
+						})
+					});
+				}
 
 			} else {
 
