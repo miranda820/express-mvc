@@ -26,37 +26,20 @@ var GuestSchema = new Schema({
 	table: Number,
 	isAdmin: {type:Boolean, default: false},
 	isPrimary: {type:Boolean, default: false},
-	rsvp: {type:Boolean, default: false}
+	rsvp: {type:Boolean, default: false},
+	tmpToken: { type: String, default: '' }
 });
 
-
-
-
-/*GuestSchema.pre('save', function(next) {
-	 var Guest = mongoose.model('Guest');
-	 Guest.findOne({ email: this.email }, function(err, guest) {
-	 	console.log('pre save',guest);
-	 	if(guest) {
-	 		error = new ValidationError(this);
-		    error.errors.email = new ValidatorError('email', 'already exist', this.email);
-			next(error);	
-	 	} 
-	 	return next();
-	 })
-    
-})*/
-
-// GuestSchema.virtual('date')
-//   .get(function(){
-//     return this._id.getTimestamp();
-//   });
 
 GuestSchema
   .virtual('password')
   .set(function(password) {
+  	console.log('virtual is firing, password is:', password, this.salt, this.email);
     this._password = password
     this.salt = this.makeSalt()
     this.hashed_password = this.encryptPassword(password)
+
+    console.log('new salt', this.salt, this.email);
   })
   .get(function() { return this._password })
 
@@ -64,6 +47,12 @@ GuestSchema
 GuestSchema.methods = {
 	makeSalt: function () {
 		return Math.round((new Date().valueOf() * Math.random())) + ''
+	},
+
+	makeTmpToken: function () {
+		var date = Math.round((new Date().valueOf() * Math.random())) + 'm1@3';
+		return  crypto.createHmac('sha1', date).update(this.email).digest('hex');
+
 	},
 	encryptPassword: function (password) {
 		if (!password) return ''

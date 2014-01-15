@@ -26,23 +26,7 @@ exports.checkGuest = function  (req, res, next) {
 	})
 }
 
-exports.guestID = function (req, res, next, id) {
-	GuestList.findOne({ _id : id })
-	.exec(function (err, user) {
-		if (err) return next(err)
-		if (!user) {
-			return res.send({
-				status:'error',
-				errors: {
-					message:'guest doesn\'t exist'
-				}
-			})
-		}
 
-		req.profile = user
-		next()
-	})
-}
 
 exports.addToGuestList = function (guestData,cb){
 	//create guest in guestlist model

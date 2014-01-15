@@ -75,6 +75,31 @@ exports.checkUser = function(req, res,next, guestId){
 		 }
 	})
 };
+exports.userExistance = function (req, res, next, mailer) {
+	Guest.findOne({email: req.body.email}, function(err, user) {
+		if(err){return next(err)}
+
+		if(user) {
+			var token = user.makeTmpToken();
+			user = _.extend(user, {tmpToken: token});
+
+			user.save(function(err) {
+				// send user email for the password
+				return res.send({
+					status:"sucess",
+					token: token,
+					message:"reset password link is sent to you"
+				});
+			})
+		} else {
+			return res.send({
+						status:"error",
+						message:"user doesn't exist, please register first"
+					});
+		}
+	})
+};
+
 
 
 exports.create = function (req, res) {
@@ -107,19 +132,6 @@ exports.create = function (req, res) {
 			})
 		
 		});
-		//create password successfully
-		/*if(guestList.isPrimary) {
-			return res.render('guest/register',{
-				isPrimary:true,
-				guestId: guestList._id
-			})//TODO add json html
-
-		} else {
-			return res.render('login',{
-				title:'login'
-			})//TODO add json html
-
-		}*/
 	});
 
 
@@ -160,6 +172,86 @@ exports.register = function(req, res) {
 
 	})
 	
+}
+
+exports.forgotPassword = function (req,res) {
+
+	return res.render('guest/password', {
+		title:"forgot password",
+		forgot_password: true
+	})
+}
+
+exports.showResetForm = function (req,res) {
+	return res.render('guest/password', {
+		title:"reset password",
+		token: req.token,
+		reset_password: true
+	})
+}
+
+
+exports.resetPassword = function (req, res, next) {
+	var token = req.body.token,
+		password = req.body.password;
+
+	if(token!== '') {
+		Guest.findOne({ tmpToken : token })
+		.exec(function (err, user) {
+
+			if (err) {
+				console.log('here');
+				return res.send( {
+					status: 'error',
+					errors: utils.errors(err.errors),
+					guest: guest
+				})
+			}
+			if (!user) {
+				return res.send({
+					status:'error',
+					errors: {
+						message:'invalid token'
+					}
+				})
+			}
+			//var hashPassword = user.encryptPassword(password);
+			user = _.extend ( user, {password: password, tmpToken:''});
+			user.save (function (err) {
+				if(err){return next(err)}
+				return res.send({
+					status:'success',
+					message:'password is updated!'
+					
+				})
+			})
+
+		})
+	} else {
+		return res.send({
+			status:'error',
+			errors: {
+				message:'invalid token'
+			}
+		})
+	}
+
+}
+
+exports.token = function (req, res, next, token) {
+	if(token !== '') {
+
+		req.token = token;
+		return next();
+
+	} else {
+		return res.send({
+			status:'error',
+			errors: {
+				message:'invalid token'
+			}
+		})
+	}
 }
 
 exports.upload = function (req, res, next) {

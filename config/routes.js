@@ -9,7 +9,7 @@ var util = require('util'),
 	profile = require('../app/controllers/profile'),
 	admin = require('../app/controllers/admin');
 
-module.exports = function(app, passport, config){
+module.exports = function(app, passport, mailer, config){
 
 
 		
@@ -45,7 +45,7 @@ module.exports = function(app, passport, config){
 
 	//app.post('/api/invite/:guestId/create/plusone', invite.createPlusOne);
 
-	app.param('guestId', guestlist.guestID);
+	
 	// route
 	
 	app.get('/', function(req, res) {
@@ -66,6 +66,16 @@ module.exports = function(app, passport, config){
 
 	app.post('/guest/add/picture', auth.requiresLogin, guest.upload);
 	app.get('/guest/register', auth.requiresLogin, guest.register);
+	app.get('/guest/forgot_password', guest.forgotPassword);
+
+	app.post ('/guest/find', function (req, res) {
+		guest.userExistance(req, res, mailer);
+	})
+
+	app.get('/guest/reset_password/:token', guest.showResetForm);
+	app.param('token', guest.token);
+	app.post('/guest/new_password', guest.resetPassword);
+//	app.post('/guest/reset_password/', guest.forgotPassword);
 
     
 	//app.post('/invite/update', auth.requiresLogin, invite.update)
