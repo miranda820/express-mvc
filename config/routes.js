@@ -9,7 +9,7 @@ var util = require('util'),
 	profile = require('../app/controllers/profile'),
 	admin = require('../app/controllers/admin');
 
-module.exports = function(app, passport, mailer, config){
+module.exports = function(app, passport, config){
 
 
 		
@@ -69,7 +69,7 @@ module.exports = function(app, passport, mailer, config){
 	app.get('/guest/forgot_password', guest.forgotPassword);
 
 	app.post ('/guest/find', function (req, res) {
-		guest.userExistance(req, res, mailer);
+		guest.userExistance(req, res, config.mailer);
 	})
 
 	app.get('/guest/reset_password/:token', guest.showResetForm);
