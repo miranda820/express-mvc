@@ -60,13 +60,13 @@ exports.createAndUpdate = function (req, res,next) {
 }
 
 exports.createPlusOne = function (req, res) {
-		//check if current logged in guest should is primary guest
+		//get current login guest's invite
 		Invite.findOne({primary: req.user.guestId}, function(err, invite) {
 			if(invite) {
 				//only allow on X amount of guest
 				//TODO change "1" to a configurable number 
 				if(invite.plusx.length < 1) {
-					guestlist.addToGuestList(req.body, function(newGuest) {
+					guestlist.addToGuestList(req, res, req.body, function(newGuest) {
 						//after guest is added to gueslist, add it to primary guest's invite
 						invite.plusx.push(newGuest._id);
 						invite.save(function (err, invite) {
@@ -83,7 +83,6 @@ exports.createPlusOne = function (req, res) {
 							});
 
 						});
-						
 					})
 					
 					

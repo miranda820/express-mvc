@@ -4,6 +4,7 @@ var mongoose = require('mongoose'),
 	GuestList = mongoose.model('GuestList'),
 	Guest = mongoose.model('Guest'),
 	async = require('async'),
+	guestlist = require('../../app/controllers/guestlist'),
 	utils = require('../../lib/utils');
 
 
@@ -29,7 +30,7 @@ exports.index = function(req, res){
 		invites: function(cb) {
 			Invite.populateAll(function(err, invites) {
 				if (err) return next(err);
-				cb(null, invites);	
+				cb(null, invites);
 			})
 		}
 
@@ -60,25 +61,17 @@ exports.signin = function (req,res){
 
 exports.createGuest = function (req, res) {  
 
-		var newUser = _.extend(req.body),
-			guestList = new GuestList (newUser);
+		var guestData = new GuestList (req.body);
 
-		guestList.save(function (err, guest) {
 
-			if(err) {
-				return res.send( {
-					status: 'error',
-					errors: utils.errors(err.errors),
-					guest: guest
-				})
-			}
+		guestlist.addToGuestList( req, res, guestData, function (guest) {
 
 			return res.send({
 				status: 'success',
 				guest: guest,
 			})
+		});
 
-		})
 	
 };
 

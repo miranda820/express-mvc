@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
 	utils = require('../../lib/utils'),
-	nodemailer = require('nodemailer'),
+	mailer = require('../../lib/mailer'),
 	path = require('path'),
 	fs = require('fs'),
 	_ = require('underscore'),
@@ -76,7 +76,7 @@ exports.checkUser = function(req, res,next, guestId){
 		 }
 	})
 };
-exports.userExistance = function (req, res, mailer) {
+exports.userExistance = function (req, res, emailConfig) {
 	Guest.findOne({email: req.body.email}, function(err, user) {
 		if(err){return next(err)}
 
@@ -85,46 +85,27 @@ exports.userExistance = function (req, res, mailer) {
 			user = _.extend(user, {tmpToken: token});
 
 			user.save(function(err) {
-				// send user email for the password
 				var resetLink = "https://" + req.get('host') + '/guest/reset_password/' + token;
-				// create reusable transport method (opens pool of SMTP connections)
-				console.log(mailer.user,mailer.pass, mailer.service, user.email);
-				var smtpTransport = nodemailer.createTransport("SMTP",{
-				    service: mailer.service,
-				    auth: {
-				        user: mailer.user,
-				        pass: mailer.pass
-				    }
-				});
-
-				// setup e-mail data with unicode symbols
-				var mailOptions = {
-				    from: mailer.name + "<"+ mailer.user +">", // sender address
-				    to: user.email , // list of receivers
-				    subject: "Reset password", // Subject line
-				    text: "Reset password here", // plaintext body
-				    html: "Please reset your password at this link<br/><a href='" + resetLink + "'>"+ resetLink +"</a>" // html body
-				}
-
-				// send mail with defined transport object
-				smtpTransport.sendMail(mailOptions, function(err, response){
-				    if(err){
-				        console.log(err);
-				        return res.send({
-							status:"error",
-							message:"Humm somthing went wrong."
-						});
-				    }else{
-				        console.log("Message sent: " + response.message);
-				        return res.send({
+				var recipient = user.email,
+					subject = 'Reset password',
+					text = 'Please reset password here',
+					html = 'Please reset password here <br/> <a href="'+ resetLink+'">'+resetLink +'</a>';
+				// send user email for the password
+				mailer.mail (emailConfig,recipient, subject, text, html, {
+					success: function () {
+						return res.send({
 							status:"sucess",
 							message:"reset password link is sent to you"
-						});
-				    }
-
-				    // if you don't want to use this transport object anymore, uncomment following line
-				    smtpTransport.close(); // shut down the connection pool, no more messages
-				});
+						})
+					},
+					error: function (err) {
+						return res.send({
+							status:"error",
+							message:"Humm somthing went wrong."
+						})
+					}
+				})
+				
 			})
 		} else {
 			return res.send({
@@ -162,7 +143,8 @@ exports.create = function (req, res) {
     		if (err) { return next(err); }
     		//return res.redirect('/guest/register');
     		return res.render('guest/register',{
-				isPrimary:true,
+    			message:"Your account is created!",
+				isPrimary:guestList.isPrimary,
 				guestId: guestList._id
 			})
 		

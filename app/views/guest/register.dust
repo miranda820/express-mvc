@@ -4,6 +4,7 @@
 		{>"guest/register-partial"/}
 	{/content}
 {:else}
+	{message}
 	{>"guest/register-partial"/}
 {/renderLayout}
 

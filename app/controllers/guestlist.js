@@ -27,8 +27,7 @@ exports.checkGuest = function  (req, res, next) {
 }
 
 
-
-exports.addToGuestList = function (guestData,cb){
+exports.addToGuestList = function (req, res, guestData, cb){
 	//create guest in guestlist model
 	var newGuest = new GuestList(guestData);
 	newGuest.save(function(err,guest) {

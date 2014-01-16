@@ -16,7 +16,7 @@
 			{/plusx}
 		{:else}
 			Add plusone:
-			<form action="/api/invite/{guestId}/create/plusone" method="POST">
+			<form action="/api/invite/add/plusone" method="POST">
 				<label>first name:</label>
 				<input type="text" name="firstName" value="">
 				<label>last name:</label>

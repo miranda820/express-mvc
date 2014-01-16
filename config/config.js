@@ -3,8 +3,8 @@ var path = require('path'),
 		env = process.env.NODE_ENV || 'development',
 		phase = 2,
 		mailService = "Gmail",
-		mailName = "Your Name",
-		mailUser = "user.account@gmail.com",
+		mailName = "your name",
+		mailUser = "your.account@gmail.com",
 		mailPass = "password";
 
 

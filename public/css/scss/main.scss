@@ -1,0 +1,25 @@
+@import "base";
+@import "mixins";
+
+@import "compass/css3";
+
+/*
+  ~1. reset css 
+  ~2. Typography
+  ~3. Global sprites
+  ~4. Base elments
+  ~5. header and footer
+*/
+
+/*
+	//  -----------------------------
+	//	~1.reset css
+*/
+	@import "compass/reset";
+/*
+	//  -----------------------------
+	//  ~2. Typography
+*/
+body {
+	background: #000;
+}
